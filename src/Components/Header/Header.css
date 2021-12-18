@@ -1,0 +1,15 @@
+.nav-item:hover {
+  background: rgb(210, 141, 8);
+}
+.navbar {
+  background: rgb(0, 0, 0);
+  color: var(--bs-dark) !important;
+  border-color: rgb(0, 0, 0);
+}
+.dropdown-menu {
+  background-color: rgb(210, 141, 8) !important;
+}
+.nav-button {
+  background-color: rgb(210, 141, 8) !important;
+  
+}
