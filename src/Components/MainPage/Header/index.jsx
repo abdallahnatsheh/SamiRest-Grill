@@ -11,20 +11,23 @@ const navBrandStyle = {
 const navItemStyle = {
     color: "rgb(255,255,255)",
 };
+const btnStyle = {
+  borderRadius: "12px",
+  background : "#790a0a"
+}
 
 const Header= () => (
 
 
 <Navbar collapseOnSelect expand="lg"  variant="dark" sticky="top">
   <Container>
-  <Navbar.Brand href="#home" style= {navBrandStyle} >Sami Grill</Navbar.Brand>
+  <Navbar.Brand href="/" style= {navBrandStyle} >Sami Grill</Navbar.Brand>
   <Navbar.Toggle aria-controls="responsive-navbar-nav" />
   <Navbar.Collapse id="responsive-navbar-nav">
     <Nav className="me-auto">
-      <Nav.Link  className="nav-item" href="#features" style = {navItemStyle}>  Home</Nav.Link>
+      <Nav.Link  className="nav-item" href="/" style = {navItemStyle}>  Home</Nav.Link>
       <Nav.Link  className="nav-item" href="#pricing" style = {navItemStyle}>Menu</Nav.Link>
-      <Nav.Link  className="nav-item" href="#dailyDeals" style = {navItemStyle}>Daily Deals</Nav.Link>
-
+      <Nav.Link  className="nav-item" href="/daily-deals" style = {navItemStyle}>Daily Deals</Nav.Link>
       <NavDropdown title="Contact Us" id="collasible-nav-dropdown" >
         <NavDropdown.Item href="#action/3.1">About us </NavDropdown.Item>
         <NavDropdown.Item href="#action/3.2">Whatsapp</NavDropdown.Item>
@@ -32,12 +35,11 @@ const Header= () => (
         <NavDropdown.Divider />
         <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
       </NavDropdown>
+      <Button variant="danger" style={btnStyle} href="/special-order">Special Order</Button>
     </Nav>
     <Nav>
       <Nav.Link href="#login">Log in</Nav.Link>
-      <Button  className="nav-button"  href="#memes">
-        Sign up
-      </Button  >
+      <Button  className="nav-button"  href="#memes" style={btnStyle}>Sign up</Button>
     </Nav>
   </Navbar.Collapse>
   </Container>

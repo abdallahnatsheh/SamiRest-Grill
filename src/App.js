@@ -1,14 +1,23 @@
-import logo from './logo.svg';
 import './App.css';
-import Header from './Components/Header/Header';
-import { Image } from 'react-bootstrap';
+import MainPage from './Components/MainPage'
+import DailyDeals from './Components/DailyDeals';
+import SpecialOrder from './Components/SpecialOrder';
+import {Route, Routes} from "react-router-dom"
+document.body.style.backgroundColor = "black";
+const mainStyle ={
+  background : "#00000",
+  color : "#000"
+}
+
 
 function App() {
   return (
-    <div className="App">
-      <Header/>
-      <Image src="./assets/img/coverpic.jpg" fluid />
-      <Image src="holder.js/100px250" fluid />
+    <div className="App" style={mainStyle}>
+      <Routes>
+        <Route exact path='/' element={<MainPage/>} />
+        <Route  path='/daily-deals' element={<DailyDeals/>} />
+        <Route  path='/special-order' element={<SpecialOrder/>} />
+      </Routes>
     </div>
   );
 }
