@@ -1,0 +1,31 @@
+.flex__wrapper {
+  display: flex;
+  position: relative;
+  background-color: #eee;
+  flex-wrap: wrap;
+}
+@media screen and (min-width: 1024px) {
+  .flex__wrapper {
+    max-width: 56%;
+  }
+}
+[class*="col--"] {
+  box-sizing: border-box;
+  flex-basis: 0;
+  flex-grow: 1;
+  max-width: 100%;
+}
+
+.col--m-s-12 {
+  width: 100%;
+}
+
+.col--t-s-6 {
+  width: 50%;
+}
+
+#headimage {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
