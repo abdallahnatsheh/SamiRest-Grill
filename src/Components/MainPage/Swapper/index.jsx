@@ -1,4 +1,6 @@
-import React, { useRef, useState } from "react";
+import React from "react";
+import { useGetSwipperData } from "../../firebase/mainPageHooks/swapperHook";
+
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
@@ -12,31 +14,30 @@ import "./styles.css";
 import SwiperCore, { Autoplay, Pagination, Navigation } from "swiper";
 // install Swiper modules
 SwiperCore.use([Autoplay, Pagination, Navigation]);
-
-const Swipper = () => (
-  <Swiper
-    spaceBetween={30}
-    centeredSlides={true}
-    autoplay={{
-      delay: 2500,
-      disableOnInteraction: false,
-    }}
-    pagination={{
-      clickable: true,
-    }}
-    navigation={true}
-    className="mySwiper"
-  >
-    <SwiperSlide>
-      <img src="./assets/img/coverpic.jpg" alt="" />
-    </SwiperSlide>
-    <SwiperSlide>
-      <img src="./assets/img/coverpic.jpg" alt="" />
-    </SwiperSlide>
-    <SwiperSlide>
-      <img src="./assets/img/coverpic.jpg" alt="" />
-    </SwiperSlide>
-  </Swiper>
-);
+//uses custom hook to
+const Swipper = () => {
+  const [documents] = useGetSwipperData();
+  return (
+    <Swiper
+      spaceBetween={30}
+      centeredSlides={true}
+      autoplay={{
+        delay: 2500,
+        disableOnInteraction: false,
+      }}
+      pagination={{
+        clickable: true,
+      }}
+      navigation={true}
+      className="mySwiper"
+    >
+      {documents.map((item) => (
+        <SwiperSlide key={Math.random()}>
+          <img src={item.image} key={Math.random()} alt="" link={item.link} />
+        </SwiperSlide>
+      ))}
+    </Swiper>
+  );
+};
 
 export default Swipper;
