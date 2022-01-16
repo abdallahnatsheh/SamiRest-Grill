@@ -1,5 +1,7 @@
 # SamiRest-Grill
-
+#SamiRest-Grill AdminPanel
+admin panel part of this project :
+url : https://github.com/abdallahnatsheh/SamiRest-Grill-AdminPanel
 
 ## Available Scripts
 
