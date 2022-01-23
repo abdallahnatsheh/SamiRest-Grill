@@ -16,105 +16,59 @@ const headingStyle = {
 /*
 latest meals component that the admin will be able to change it from his admin panel
 */
-const LMCard = () => (
-  <Container style={containerStyle} fluid>
-    <div className="intro" style={{ margin: "0 auto 40px" }}>
-      <h2 className="text-center" style={headingStyle}>
-        جديد المطعم
-      </h2>
-      <p className="text-center" style={{ color: "rgb(255,255,255)" }}>
-        🤩 هنا تجد اجدد واحدث وجبات المطعم{" "}
-      </p>
-    </div>
-    <div className="main">
-      <ul className="cards">
-        <li className="cards_item">
-          <div className="card">
-            <div className="card_image">
-              <img
-                src="https://i.postimg.cc/J4HVWTzP/1.webp"
-                alt="mixed vegetable salad in a mason jar. "
-              />
-            </div>
-            <div className="card_content">
-              <h2 className="card_title">
-                Farmstand Salad <span>9.00 NIS</span>
-              </h2>
-              <div className="card_text">
-                <p>
-                  Dig into the freshest veggies of the season! This
-                  salad-in-a-jar features a mixture of leafy greens and seasonal
-                  vegetables, fresh from the farmer&#39;s market.
-                </p>
-                <p>
-                  Served with your choice of dressing on the side: housemade
-                  ranch, cherry balsamic vinaigrette, creamy chipotle, avocado
-                  green goddess, or honey mustard. Add your choice of protein
-                  for $2 more.{" "}
-                </p>
+const LMCard = (props) => {
+  return (
+    <Container style={containerStyle} fluid>
+      <div className="intro" style={{ margin: "0 auto 40px" }}>
+        <h2 className="text-center" style={headingStyle}>
+          {props.title.data().title ? props.title.data().title : "جديد المطعم"}
+        </h2>
+        <p className="text-center" style={{ color: "rgb(0,0,0)" }}>
+          {props.paragraph.data().paragraph
+            ? props.paragraph.data().paragraph
+            : " 🤩 هنا تجد اجدد واحدث وجبات المطعم "}
+        </p>
+      </div>
+      <div className="main">
+        <ul className="cards">
+          {props.cards.map((card) => (
+            <li className="cards_item" key={card.id}>
+              <div className="card">
+                <div className="card_image">
+                  <img
+                    style={{ height: "250px", width: "250" }}
+                    src={card.data().img}
+                    alt="card"
+                  />
+                </div>
+                <div className="card_content">
+                  <h2 className="card_title">
+                    {card.data().name}
+                    {card.data().deals.enabled ? (
+                      <span>
+                        <del style={{ fontSize: "15px" }}>
+                          {card.data().price} NIS
+                        </del>{" "}
+                        {card.data().price -
+                          (card.data().price * card.data().deals.value) / 100}
+                        NIS
+                      </span>
+                    ) : (
+                      <span>{card.data().price} NIS</span>
+                    )}
+                  </h2>
+                  <div className="card_text">
+                    <p>{card.data().info.infoF}</p>
+                    <p>{card.data().info.infoS}</p>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </li>
-        <li className="cards_item">
-          <div className="card">
-            <div className="card_image">
-              <img
-                src="https://i.postimg.cc/J4HVWTzP/1.webp"
-                alt="mixed vegetable salad in a mason jar. "
-              />
-            </div>
-            <div className="card_content">
-              <h2 className="card_title">
-                Farmstand Salad <span>9.00 NIS</span>
-              </h2>
-              <div className="card_text">
-                <p>
-                  Dig into the freshest veggies of the season! This
-                  salad-in-a-jar features a mixture of leafy greens and seasonal
-                  vegetables, fresh from the farmer&#39;s market.
-                </p>
-                <p>
-                  Served with your choice of dressing on the side: housemade
-                  ranch, cherry balsamic vinaigrette, creamy chipotle, avocado
-                  green goddess, or honey mustard. Add your choice of protein
-                  for $2 more.{" "}
-                </p>
-              </div>
-            </div>
-          </div>
-        </li>
-        <li className="cards_item">
-          <div className="card">
-            <div className="card_image">
-              <img
-                src="https://i.postimg.cc/J4HVWTzP/1.webp"
-                alt="mixed vegetable salad in a mason jar. "
-              />
-            </div>
-            <div className="card_content">
-              <h2 className="card_title">
-                Farmstand Salad <span>9.00 NIS</span>
-              </h2>
-              <div className="card_text">
-                <p>
-                  Dig into the freshest veggies of the season! This
-                  salad-in-a-jar features a mixture of leafy greens and seasonal
-                  vegetables, fresh from the farmer&#39;s market.
-                </p>
-                <p>
-                  Served with your choice of dressing on the side: housemade
-                  ranch, cherry balsamic vinaigrette, creamy chipotle, avocado
-                  green goddess, or honey mustard. Add your choice of protein
-                  for $2 more.{" "}
-                </p>
-              </div>
-            </div>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </Container>
-);
+            </li>
+          ))}
+        </ul>
+      </div>
+    </Container>
+  );
+};
 
 export default LMCard;

@@ -1,5 +1,4 @@
 import React from "react";
-import { useGetSwipperData } from "../../firebase/mainPageHooks/swapperHook";
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -15,8 +14,7 @@ import SwiperCore, { Autoplay, Pagination, Navigation } from "swiper";
 // install Swiper modules
 SwiperCore.use([Autoplay, Pagination, Navigation]);
 //uses custom hook to
-const Swipper = () => {
-  const [documents] = useGetSwipperData();
+const Swipper = (props) => {
   return (
     <Swiper
       spaceBetween={30}
@@ -31,11 +29,15 @@ const Swipper = () => {
       navigation={true}
       className="mySwiper"
     >
-      {documents.map((item) => (
-        <SwiperSlide key={Math.random()}>
-          <img src={item.image} key={Math.random()} alt="" link={item.link} />
-        </SwiperSlide>
-      ))}
+      {!props.swipers ? (
+        <span>loading..</span>
+      ) : (
+        props.swipers.map((item) => (
+          <SwiperSlide key={item.id}>
+            <img src={item.data().image} key={item.id} alt="" />
+          </SwiperSlide>
+        ))
+      )}
     </Swiper>
   );
 };

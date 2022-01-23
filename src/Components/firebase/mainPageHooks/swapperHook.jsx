@@ -10,8 +10,7 @@ export const useGetSwipperData = () => {
   useEffect(
     () =>
       onSnapshot(collection(db, "SwipperMainPage"), (snapshot) => {
-        //setDocuments(snapshot.docs.map((doc) => doc.data()));
-        setDocuments(snapshot.docs.map((doc) => doc.data()));
+        setDocuments(snapshot.docs.map((doc) => doc));
       }),
     []
   );
