@@ -1,4 +1,5 @@
 import React from "react";
+import Badge from "react-bootstrap/Badge";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import { cartAddItem, cartRemoveItem } from "../../../redux/cart/cart.action";
@@ -25,7 +26,7 @@ const MenuItem = ({
   cartAddItem,
   cartRemoveItem,
 }) => {
-  const { id, img, name, price, info } = item;
+  const { id, img, name, price, info, deals } = item;
 
   const handleQuantity = () => {
     let quantity = 0;
@@ -44,14 +45,34 @@ const MenuItem = ({
       <div className="item-head_desc">
         <p className="head_desc-name">{name}</p>
       </div>
-      <div className="item-foot_desc">
-        <span className="foot_desc-price">{price} NIS</span>
-        <ButtonAddRemoveItem
-          quantity={handleQuantity()}
-          handleRemoveItem={() => cartRemoveItem(item)}
-          handleAddItem={() => cartAddItem(item)}
-        />
-      </div>
+      {deals.enabled ? (
+        <div>
+          <Badge pill bg="warning" text="dark" className="item-food-discount ">
+            <small> %{deals.value} :خصم</small>
+            <br />
+            <del> {price} NIS</del>
+          </Badge>
+          <div className="item-foot_desc">
+            <span className="foot_desc-price">
+              {price - (price * deals.value) / 100} NIS
+            </span>
+            <ButtonAddRemoveItem
+              quantity={handleQuantity()}
+              handleRemoveItem={() => cartRemoveItem(item)}
+              handleAddItem={() => cartAddItem(item)}
+            />
+          </div>
+        </div>
+      ) : (
+        <div className="item-foot_desc">
+          <span className="foot_desc-price">{price} NIS</span>
+          <ButtonAddRemoveItem
+            quantity={handleQuantity()}
+            handleRemoveItem={() => cartRemoveItem(item)}
+            handleAddItem={() => cartAddItem(item)}
+          />
+        </div>
+      )}
     </div>
   );
 };
