@@ -14,7 +14,7 @@ import SwiperCore, { Autoplay, Pagination, Navigation } from "swiper";
 // install Swiper modules
 SwiperCore.use([Autoplay, Pagination, Navigation]);
 //uses custom hook to
-const Swipper = (props) => {
+const Swipper = React.memo(function Swipper(props) {
   return (
     <Swiper
       spaceBetween={30}
@@ -40,6 +40,6 @@ const Swipper = (props) => {
       )}
     </Swiper>
   );
-};
+});
 
 export default Swipper;

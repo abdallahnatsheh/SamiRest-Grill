@@ -1,29 +1,24 @@
 import React from "react";
+import { Button } from "react-bootstrap";
 import "./styles.css";
 
-const ButtonAddRemoveItem = ({ quantity, handleAddItem, handleRemoveItem }) => {
+const ButtonAddRemoveItem = ({ handleAdd, handleRemove, neededQuantitiy }) => {
   return (
-    <div className="btnAddRemove">
-      {quantity !== 0 ? (
-        <div className="btnAddRemove-positive">
-          <i
-            className="fa fa-minus"
-            aria-hidden="true"
-            onClick={handleRemoveItem}
-          ></i>
-          <span> {quantity}</span>
-          <i
-            className="fa fa-plus"
-            aria-hidden="true"
-            onClick={handleAddItem}
-          ></i>
-        </div>
-      ) : (
-        <div onClick={handleAddItem} className="btnAddRemove-negative">
-          <span>ADD</span>
-          <i className="fa fa-plus" aria-hidden="true"></i>
-        </div>
-      )}
+    <div className="btnAddRemove pull-left">
+      <div className="btnAddRemove-positive">
+        <Button
+          disabled={neededQuantitiy <= 1}
+          className="fa fa-minus"
+          aria-hidden="true"
+          onClick={handleRemove}
+        ></Button>
+        <span> {neededQuantitiy}</span>
+        <Button
+          className="fa fa-plus"
+          aria-hidden="true"
+          onClick={handleAdd}
+        ></Button>
+      </div>
     </div>
   );
 };

@@ -1,0 +1,23 @@
+.meal-modal {
+  width: relative;
+  height: 70rem;
+}
+
+.item-modal {
+  position: relative;
+  justify-items: center;
+  text-align: center;
+  flex-direction: column;
+  display: flex;
+}
+.meal-modal-text {
+  font-size: 30px;
+  color: black;
+}
+
+#type-form {
+  text-align: right;
+  margin: 25px auto;
+  color: black;
+  font-size: 18px;
+}

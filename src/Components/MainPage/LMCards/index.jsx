@@ -16,7 +16,7 @@ const headingStyle = {
 /*
 latest meals component that the admin will be able to change it from his admin panel
 */
-const LMCard = (props) => {
+const LMCard = React.memo(function LMCard(props) {
   return (
     <Container style={containerStyle} fluid>
       <div className="intro" style={{ margin: "0 auto 40px" }}>
@@ -69,6 +69,6 @@ const LMCard = (props) => {
       </div>
     </Container>
   );
-};
+});
 
 export default LMCard;
