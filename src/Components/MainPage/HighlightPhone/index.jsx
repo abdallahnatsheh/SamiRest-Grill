@@ -17,44 +17,45 @@ const imageStyle = {
 /*
 this component shows that the resturant will have application on smart phones
 */
-const HighlightPhone = () => (
-  <section className="highlight-phone" style={mainStyle}>
-    <Container>
-      <Row>
-        <Col>
-          <h2>
+const HighlightPhone = React.memo(function HighlightPhone() {
+  return (
+    <section className="highlight-phone" style={mainStyle}>
+      <Container>
+        <Row>
+          <Col>
+            <h2>
+              <br />
+              <strong>
+                <Badge bg="dark">!قريبا </Badge> تطبيق شامل لخدمات المطعم
+              </strong>
+              <br />
+            </h2>
+            <p>
+              {" "}
+              جوعان؟ السعادة على بعد نقرة واحدة ، جرب الأفضل في منطقتك حتى عتبة
+              داركم. لا يوجد عنوان شارع؟ لا مشكلة! السائقين في طريقهم. مع
+              امكانية متابعة طلباتكم بشكل حي على الخريطة
+            </p>
             <br />
-            <strong>
-              <Badge bg="dark">!قريبا </Badge> تطبيق شامل لخدمات المطعم
-            </strong>
+            <Button
+              style={btnStyle}
+              href="https://play.google.com/store/apps"
+              target="_blank"
+              disabled
+            >
+              ! حمله قريبا
+            </Button>
             <br />
-          </h2>
-          <p>
-            {" "}
-            جوعان؟ السعادة على بعد نقرة واحدة ، جرب الأفضل في منطقتك حتى عتبة
-            داركم. لا يوجد عنوان شارع؟ لا مشكلة! السائقين في طريقهم. مع امكانية
-            متابعة طلباتكم بشكل حي على الخريطة
-          </p>
-          <br />
-          <Button
-            style={btnStyle}
-            href="https://play.google.com/store/apps"
-            target="_blank"
-            disabled
-          >
-            ! حمله قريبا
-          </Button>
-          <br />
-        </Col>
-        <Col>
-          <Image
-            src="./assets/img/logo-content-phone-new_pixel_quite_black_portrait.png"
-            style={imageStyle}
-          />
-        </Col>
-      </Row>
-    </Container>
-  </section>
-);
-
+          </Col>
+          <Col>
+            <Image
+              src="./assets/img/logo-content-phone-new_pixel_quite_black_portrait.png"
+              style={imageStyle}
+            />
+          </Col>
+        </Row>
+      </Container>
+    </section>
+  );
+});
 export default HighlightPhone;

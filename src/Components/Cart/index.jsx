@@ -1,33 +1,29 @@
-import React from "react";
-import { connect } from "react-redux";
-import { createStructuredSelector } from "reselect";
+import React, { useContext } from "react";
 import EmptyCart from "./EmptyCart";
 import Header from "../MainPage/Header";
 import Footer from "../MainPage/Footer";
 import Menu from "../Menu";
-import {
-  selectCartItems,
-  selectCartItemsCount,
-  selectCartTotal,
-} from "../../redux/cart/cart.selector";
+import shopContext from "../../context/shop-context";
 import "./styles.css";
-
 /*
 cart component that show what is in the cart and take what is existed in the redux store
 if there is nothing to show empty cart component 
 */
-const Cart = ({ cartCount, cartList, cartTotal }) => {
+const Cart = () => {
+  const context = useContext(shopContext);
+  let cartTotal = 0;
+  context.cart.map((item) => (cartTotal += item.totalPrice));
   return (
     <>
       <Header />
       <div className="cart-header"></div>
-      {cartCount === 0 ? (
+      {context.cart.length <= 0 ? (
         <EmptyCart />
       ) : (
         <div className="orders">
           <h1 className="orders-heading">طلباتك</h1>
           <div className="orders-menu">
-            <Menu list={cartList} />
+            <Menu list={context.cart} />
           </div>
           <h3 className="orders-total">NIS {cartTotal} المجموع الكلي</h3>
         </div>
@@ -37,10 +33,4 @@ const Cart = ({ cartCount, cartList, cartTotal }) => {
   );
 };
 
-const mapStateToProps = createStructuredSelector({
-  cartCount: selectCartItemsCount,
-  cartList: selectCartItems,
-  cartTotal: selectCartTotal,
-});
-
-export default connect(mapStateToProps)(Cart);
+export default Cart;

@@ -18,7 +18,7 @@ const btnStyle = {
 /*
 nav bar component called the header 
 */
-const Header = () => {
+const Header = React.memo(function Header() {
   const navigate = useNavigate();
   return (
     <Navbar collapseOnSelect expand="lg" variant="dark" sticky="top">
@@ -91,5 +91,5 @@ const Header = () => {
       </Container>
     </Navbar>
   );
-};
+});
 export default Header;

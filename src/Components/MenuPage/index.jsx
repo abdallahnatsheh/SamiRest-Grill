@@ -1,22 +1,29 @@
-import React, { useRef } from "react";
-import ButtonCartCount from "../ButtonAddRemoveItem";
+import React from "react";
+import { Spinner } from "react-bootstrap";
+import shopContext from "../../context/shop-context";
 import Footer from "../MainPage/Footer";
 import Header from "../MainPage/Header";
 import Menu from "../Menu";
-import { menuItemsData } from "../Menu/data";
+
 /*
 main menu page component that pass menu data as prop for menu component
  */
-const MenuPage = () => {
-  const menuRef = useRef();
+const MenuPage = React.memo(function MenuPage() {
   return (
-    <div>
-      <Header />
-      <Menu list={menuItemsData} ref={menuRef} />
-      <Footer />
-      <ButtonCartCount />
-    </div>
+    <shopContext.Consumer>
+      {(context) => (
+        <div>
+          <Header />
+          {context.products.length !== 0 ? (
+            <Menu list={context.products} />
+          ) : (
+            <Spinner />
+          )}
+          <Footer />
+        </div>
+      )}
+    </shopContext.Consumer>
   );
-};
+});
 
 export default MenuPage;

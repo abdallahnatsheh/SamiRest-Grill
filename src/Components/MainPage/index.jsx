@@ -9,23 +9,36 @@ import Footer from "./Footer";
 import { useGetLmcardsData } from "../firebase/mainPageHooks/lmcardsHook";
 import { Spinner } from "react-bootstrap";
 import { useGetSwipperData } from "../firebase/mainPageHooks/swapperHook";
+import { useGetgalleryData } from "../firebase/mainPageHooks/mpgalleryHook";
+import React from "react";
 /*
 main page component that put everything togather
 */
-const MainPage = () => {
+const MainPage = React.memo(function MainPage() {
   //recieving header and cards from custom hook that fetch the data from firebase firestore
-  const [header, cards] = useGetLmcardsData();
+  const [lmheader, lmcards] = useGetLmcardsData();
   //recieving swippers images url from firebase firestore using custom hook
   const [swipers] = useGetSwipperData();
-  return swipers.length !== 0 || header.length !== 0 || cards.length !== 0 ? (
+
+  const [galleryHeader, gallery] = useGetgalleryData();
+
+  return swipers.length !== 0 &&
+    lmheader.length !== 0 &&
+    lmcards.length !== 0 &&
+    galleryHeader.length !== 0 &&
+    gallery.length !== 0 ? (
     <div className="main-page">
       <Header />
       <Swipper swipers={swipers} />
       <HighlightPhone />
       <Feautures />
-      <LMCard title={header[0]} paragraph={header[1]} cards={cards} />
+      <LMCard title={lmheader[0]} paragraph={lmheader[1]} cards={lmcards} />
       <Testimonials />
-      <LBGallery />
+      <LBGallery
+        title={galleryHeader[0]}
+        paragraph={galleryHeader[1]}
+        gallery={gallery}
+      />
       <Footer />
     </div>
   ) : (
@@ -39,6 +52,6 @@ const MainPage = () => {
       <Spinner animation="grow" variant="light" />
     </div>
   );
-};
+});
 
 export default MainPage;
