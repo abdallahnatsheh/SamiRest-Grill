@@ -1,6 +1,6 @@
 export const ADD_PRODUCT = "ADD_PRODUCT";
 export const REMOVE_PRODUCT = "REMOVE_PRODUCT";
-
+//add meal to cart ,check if existed will increase the quantity if not add it
 const addProductToCart = (product, state) => {
   const updatedCart = [...state.cart];
   const updatedItemIndex = updatedCart.findIndex(
@@ -16,12 +16,11 @@ const addProductToCart = (product, state) => {
     updatedItem.quantity += product.quantity;
     updatedItem.totalPrice = product.totalPrice;
     updatedCart[updatedItemIndex] = updatedItem;
-    console.log("updatedItem", updatedItem);
   }
 
   return { ...state, cart: updatedCart };
 };
-
+//remove item from cart
 const removeProductFromCart = (product, state) => {
   const updatedCart = [...state.cart];
   const updatedItemIndex = updatedCart.findIndex(
@@ -45,7 +44,7 @@ const removeProductFromCart = (product, state) => {
   }
   return { ...state, cart: updatedCart };
 };
-
+//manage cart actions
 export const shopReducer = (state, action) => {
   switch (action.type) {
     case ADD_PRODUCT:
