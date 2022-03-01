@@ -6,7 +6,7 @@ import Menu from "../Menu";
 import shopContext from "../../context/shop-context";
 import "./styles.css";
 /*
-cart component that show what is in the cart and take what is existed in the redux store
+cart component that show what is in the cart and take what is existed in the context cookies storage
 if there is nothing to show empty cart component 
 */
 const Cart = () => {

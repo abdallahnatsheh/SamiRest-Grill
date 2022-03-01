@@ -19,7 +19,7 @@ const MainPage = React.memo(function MainPage() {
   const [lmheader, lmcards] = useGetLmcardsData();
   //recieving swippers images url from firebase firestore using custom hook
   const [swipers] = useGetSwipperData();
-
+  //hook that recieves gallery header and images from firebase
   const [galleryHeader, gallery] = useGetgalleryData();
 
   return swipers.length !== 0 &&

@@ -6,7 +6,7 @@ import Header from "../MainPage/Header";
 import Menu from "../Menu";
 
 /*
-main menu page component that pass menu data as prop for menu component
+main menu page component that pass menu data as prop for menu component after recieving it from context
  */
 const MenuPage = React.memo(function MenuPage() {
   return (

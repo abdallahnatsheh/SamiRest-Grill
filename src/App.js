@@ -10,7 +10,11 @@ import Support from "./Components/Support";
 import NotFound from "./Components/NotFoundPage";
 import Cart from "./Components/Cart";
 import MenuPage from "./Components/MenuPage";
-import GlobalState from "./context/GlobalState";
+import CartContext from "./context/CartContext";
+import AuthContext from "./context/AuthContext";
+import { NotificationContainer } from "react-notifications";
+import ResetPass from "./Components/ResetPass";
+import Profile from "./Components/Profile";
 
 document.body.style.backgroundColor = "black";
 const mainStyle = {
@@ -28,20 +32,25 @@ const mainStyle = {
 function App() {
   return (
     <div className="App" style={mainStyle}>
-      <GlobalState>
-        <Routes>
-          <Route exact path="/" element={<MainPage />} />
-          <Route exact path="/cart" element={<Cart />} />
-          <Route path="/daily-deals" element={<DailyDeals />} />
-          <Route path="/special-order" element={<SpecialOrder />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/about-us" element={<AboutUs />} />
-          <Route path="/support" element={<Support />} />
-          <Route path="/menu" element={<MenuPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </GlobalState>
+      <AuthContext>
+        <CartContext>
+          <Routes>
+            <Route exact path="/" element={<MainPage />} />
+            <Route exact path="/cart" element={<Cart />} />
+            <Route path="/daily-deals" element={<DailyDeals />} />
+            <Route path="/special-order" element={<SpecialOrder />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route exact path="/reset-password" element={<ResetPass />} />
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/menu" element={<MenuPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </CartContext>
+      </AuthContext>
+      <NotificationContainer />
     </div>
   );
 }

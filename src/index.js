@@ -6,6 +6,8 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter } from "react-router-dom";
+import "react-notifications/lib/notifications.css";
+
 /*
 here i use react redux store provider for the cart and for the menu
 presist gate used to load the menu from the server and delay rendering until in recieved

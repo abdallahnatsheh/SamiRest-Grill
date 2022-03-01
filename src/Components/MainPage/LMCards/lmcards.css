@@ -17,7 +17,7 @@ ul {
   place-items: center;
 }
 
-.cards {
+.main .cards {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
@@ -26,14 +26,14 @@ ul {
   grid-gap: 1em;
 }
 
-.cards_item {
+.main .card .cards_item {
   width: 340px;
   overflow: hidden;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 30px 90px;
   border: 10px solid rgba(212, 212, 212, 0.726);
 }
 
-.card {
+.main .card {
   position: relative;
   height: 440px;
   background-color: var(--black-bkg);

@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./styles.css";
-
+//this component shows empty cart
 const EmptyCart = () => {
   const navigate = useNavigate();
   return (

@@ -3,15 +3,14 @@ import Header from "../MainPage/Header";
 import Footer from "../MainPage/Footer";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import "./login.css";
-import { Container } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
+import { useAuth } from "../../context/AuthContext";
+import * as Yup from "yup";
 
 const errorStyling = {
   color: "rgb(255,255,255)",
 };
-const labelStyle = {
-  color: "rgb(255,255,255)",
-  fontSize: "15px",
-};
+
 const loginBtnStyle = {
   background: "rgb(210,141,8)",
   color: "rgb(0,0,0)",
@@ -24,173 +23,153 @@ const fbgmBtnStyle = {
   bordeWidth: "0px",
 };
 /*
-login page with formik form and validation , it will be editied with firebase authentications ofcourse
+login page with formik form and validation , now its connected with firebase 
 */
-const Login = () => (
-  <div className="special-order-page">
-    <Header />
-    <Formik
-      initialValues={{
-        email: "",
-        password: "",
-      }}
-      onSubmit={(values, actions) => {
-        alert(JSON.stringify(values, null, 2));
-        actions.setSubmitting(false);
-      }}
-      validate={(values) => {
-        const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-        const onealpha = /[a-z]/i;
-        const onenum = /[0-9~!@#$%^&*()_+\-={}|[\]\\:";'<>?,./]/i;
-        const errors = {};
-        if (!values.email) {
-          errors.email = "البريد الالكتروني مطلوب";
-        } else if (!emailRegex.test(values.email)) {
-          errors.email = "البريد الالكتروني غير صالح";
-        }
-        if (!values.password) {
-          errors.password = "كلمة السر مطلوبة";
-        } else if (!onealpha.test(values.password)) {
-          errors.password = "At least 1 lowercase or uppercase letter";
-        } else if (!onenum.test(values.password)) {
-          errors.password = "رقم او رمز واحد على الاقل مطلوب";
-        }
-        return errors;
-      }}
-    >
-      {() => (
-        <section
-          className="register-photo"
-          style={{ background: "rgb(121,10,10)" }}
-        >
-          <Container className="form-container">
-            <div className="image-holder"></div>
-            <Form style={{ background: "#850b0b" }}>
-              <h1 style={{ color: "rgb(255,255,255)" }}>
-                <br />
-                <strong>! مرحبا بعودتك</strong>
-                <br />
-                <br />
-              </h1>
+const Login = () => {
+  //importing authentication function from authentication context
+  const { login, loginWithGoogle } = useAuth();
+  const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+  const onealpha = /[a-z]/i;
+  const onenum = /[0-9~!@#$%^&*()_+\-={}|[\]\\:";'<>?,./]/i;
 
-              <div className="mb-3">
-                <Field
-                  id="exampleInputEmail"
-                  htmlFor="email"
-                  autoComplete="email"
-                  className="border rounded-pill form-control form-control-user"
-                  type="email"
-                  aria-describedby="emailHelp"
-                  placeholder="البريد الالكتروني"
-                  name="email"
-                  minLength="10"
-                  maxLength="100"
-                  pattern="/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3}"
-                  required
-                />
-              </div>
-              <ErrorMessage
-                name="email"
-                render={(msg) => (
-                  <div type="invalid" style={errorStyling}>
-                    {"! " + msg + " *"}
-                  </div>
-                )}
-              />
+  return (
+    <div className="special-order-page">
+      <Header />
+      <Formik
+        initialValues={{
+          email: "",
+          password: "",
+        }}
+        onSubmit={async (values, actions) => {
+          await login(values.email, values.password);
+          actions.setSubmitting(false);
+        }}
+        validationSchema={Yup.object().shape({
+          email: Yup.string()
+            .email("البريد الالكتروني غير صالح")
+            .matches(emailRegex, "البريد الالكتروني غير صالح")
+            .required("البريد الالكتروني مطلوب"),
+          password: Yup.string()
+            .min(6, "كلمة السر يجب ان تكون ستة منازل على الاقل")
+            .max(50, "لقد تجاوزت الحد المسموح ")
+            .matches(onealpha, "على الاقل حرف واحد كبير او صغير")
+            .matches(onenum, "رقم او رمز واحد على الاقل")
+            .required("كلمة السر مطلوبة"),
+        })}
+      >
+        {({ isSubmitting }) => (
+          <section
+            className="register-photo"
+            style={{ background: "rgb(121,10,10)" }}
+          >
+            <Container className="form-container">
+              <div className="image-holder"></div>
+              <Form style={{ background: "#850b0b" }}>
+                <h1 style={{ color: "rgb(255,255,255)" }}>
+                  <br />
+                  <strong>! مرحبا بعودتك</strong>
+                  <br />
+                  <br />
+                </h1>
 
-              <div className="mb-3">
-                <Field
-                  id="exampleInputPassword"
-                  autoComplete="password"
-                  htmlFor="password"
-                  className="border rounded-pill form-control form-control-user"
-                  type="password"
-                  placeholder="كلمة السر"
-                  name="password"
-                  minLength="6"
-                  maxLength="50"
-                  required
-                />
-              </div>
-              <ErrorMessage
-                name="password"
-                render={(msg) => (
-                  <div type="invalid" style={errorStyling}>
-                    {"! " + msg + " *"}
-                  </div>
-                )}
-              />
-
-              <div className="mb-3">
-                <div className="custom-control custom-checkbox small">
-                  <div className="form-check">
-                    <input
-                      id="formCheck-1"
-                      className="form-check-input custom-control-input"
-                      type="checkbox"
-                    />
-                    <label
-                      className="form-check-label custom-control-label"
-                      htmlFor="formCheck-1"
-                      style={labelStyle}
-                    >
-                      تذكرني
-                    </label>
-                  </div>
+                <div className="mb-3">
+                  <Field
+                    id="exampleInputEmail"
+                    htmlFor="email"
+                    autoComplete="email"
+                    className="border rounded-pill form-control form-control-user"
+                    type="email"
+                    aria-describedby="emailHelp"
+                    placeholder="البريد الالكتروني"
+                    name="email"
+                  />
                 </div>
-              </div>
+                <ErrorMessage
+                  name="email"
+                  render={(msg) => (
+                    <div type="invalid" style={errorStyling}>
+                      {"! " + msg + " *"}
+                    </div>
+                  )}
+                />
 
-              <button
-                className="btn btn-primary border rounded-pill d-block btn-user w-100"
-                type="submit"
-                style={loginBtnStyle}
-              >
-                تسجيل الدخول
-              </button>
+                <div className="mb-3">
+                  <Field
+                    id="exampleInputPassword"
+                    autoComplete="password"
+                    htmlFor="password"
+                    className="border rounded-pill form-control form-control-user"
+                    type="password"
+                    placeholder="كلمة السر"
+                    name="password"
+                  />
+                </div>
+                <ErrorMessage
+                  name="password"
+                  render={(msg) => (
+                    <div type="invalid" style={errorStyling}>
+                      {"! " + msg + " *"}
+                    </div>
+                  )}
+                />
 
-              <hr style={{ background: "rgb(0,0,0)" }} />
-              <a
-                className="btn btn-primary border rounded-pill d-block btn-google btn-user w-100 mb-2"
-                role="button"
-                href="#firebase/google"
-                style={fbgmBtnStyle}
-              >
-                <i className="fab fa-google"></i>  تسجيل باستخدام جوجل
-              </a>
-              <a
-                className="btn btn-primary border rounded-pill d-block btn-facebook btn-user w-100"
-                role="button"
-                href="#firebase/facebook"
-                style={fbgmBtnStyle}
-              >
-                <i className="fab fa-facebook-f"></i>  تسجيل باستخدام فيسبوك
-              </a>
-              <hr style={{ background: "rgb(0,0,0)" }} />
-              <div className="text-center">
-                <a
-                  className="small"
-                  href="#forgetpass"
-                  style={{ color: "rgb(255,255,255)" }}
+                <div className="mb-3">
+                  <div className="custom-control custom-checkbox small"></div>
+                </div>
+
+                <button
+                  className="btn btn-primary border rounded-pill d-block btn-user w-100"
+                  type="submit"
+                  style={loginBtnStyle}
+                  disabled={isSubmitting}
                 >
-                  نسيت كلمة المرور ؟
-                </a>
-              </div>
-              <div className="text-center">
-                <a
-                  className="small"
-                  href="/signup"
-                  style={{ color: "rgb(255,255,255)" }}
+                  تسجيل الدخول
+                </button>
+
+                <hr style={{ background: "rgb(0,0,0)" }} />
+                <Button
+                  className="btn btn-primary border rounded-pill d-block btn-google btn-user w-100 mb-2"
+                  role="button"
+                  style={fbgmBtnStyle}
+                  onClick={async () => await loginWithGoogle()}
                 >
-                  انشاء حساب
-                </a>
-              </div>
-            </Form>
-          </Container>
-        </section>
-      )}
-    </Formik>
-    <Footer />
-  </div>
-);
+                  <i className="fab fa-google"></i>  تسجيل باستخدام جوجل
+                </Button>
+                <Button
+                  className="btn btn-primary border rounded-pill d-block btn-facebook btn-user w-100"
+                  role="button"
+                  style={fbgmBtnStyle}
+                  href="#"
+                >
+                  <i className="fab fa-facebook-f"></i>  تسجيل باستخدام فيسبوك
+                </Button>
+                <hr style={{ background: "rgb(0,0,0)" }} />
+                <div className="text-center">
+                  <a
+                    className="small"
+                    style={{ color: "rgb(255,255,255)" }}
+                    href="/reset-passwsord"
+                  >
+                    نسيت كلمة المرور ؟
+                  </a>
+                </div>
+                <div className="text-center">
+                  <a
+                    className="small"
+                    href="/signup"
+                    style={{ color: "rgb(255,255,255)" }}
+                  >
+                    انشاء حساب
+                  </a>
+                </div>
+              </Form>
+            </Container>
+          </section>
+        )}
+      </Formik>
+      <Footer />
+    </div>
+  );
+};
 
 export default Login;

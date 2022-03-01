@@ -7,7 +7,7 @@ const headingStyle = {
   fontSize: "44.128px",
 };
 /*
-testamonial page component 
+testamonial page component it will be changed it future
 */
 const Testimonials = React.memo(function Testimonials() {
   return (
