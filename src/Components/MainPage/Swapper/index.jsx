@@ -1,4 +1,5 @@
 import React from "react";
+// Import Swiper React components , the admin can edit it as he wants
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -13,7 +14,6 @@ import "./styles.css";
 import SwiperCore, { Autoplay, Pagination, Navigation } from "swiper";
 // install Swiper modules
 SwiperCore.use([Autoplay, Pagination, Navigation]);
-//uses custom hook to
 const Swipper = React.memo(function Swipper(props) {
   return (
     <Swiper

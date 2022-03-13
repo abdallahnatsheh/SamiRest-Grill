@@ -3,7 +3,7 @@ import shopContext from "../../../context/shop-context";
 import { useNavigate } from "react-router-dom";
 import "./styles.css";
 /*
-cart button component that shows also how many items in the cart 
+cart button component that shows  how many items in the cart 
 */
 const ButtonCartCount = React.memo(function ButtonCartCount() {
   const context = useContext(shopContext);

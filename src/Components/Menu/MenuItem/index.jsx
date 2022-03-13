@@ -5,18 +5,7 @@ import ShowItemModal from "./ShowItemModal";
 import "./styles.css";
 import shopContext from "../../../context/shop-context";
 /**
- * this component build the item shape with picture , name , price,add product component
- * and dispatch actions with redux.
- * 
-        <p className="head_desc-info">
-          <small>{info}</small>
-        </p> 
-                    <ButtonAddRemoveItem
-              quantity={handleQuantity()}
-              handleRemoveItem={() => cartRemoveItem(item)}
-              handleAddItem={() => cartAddItem(item)}
-            />
-
+ * this component build item menu after recieving it from firestore
  */
 
 const MenuItem = ({ list }) => {

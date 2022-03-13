@@ -1,3 +1,4 @@
+//sample file for menu
 export const menuItemsData = [
   {
     id: 1,

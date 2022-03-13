@@ -2,7 +2,7 @@ import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import "./feautures.css";
 import { BsFillPinMapFill, BsClockFill, BsTelephoneFill } from "react-icons/bs";
-
+//this component shows the restaurant feauture , it may be edited in the future
 const mainStyle = {
   width: "100%",
   height: "100%",

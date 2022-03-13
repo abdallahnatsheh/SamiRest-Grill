@@ -1,6 +1,6 @@
 import React from "react";
 import "./footer.css";
-
+//this is the website footer it will   be edited in future
 const Footer = React.memo(function Footer() {
   return (
     <footer className="footer-basic" style={{ background: "#000000" }}>

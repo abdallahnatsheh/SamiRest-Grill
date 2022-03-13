@@ -14,7 +14,7 @@ const headingStyle = {
   color: "#000000",
 };
 /*
-latest meals component that the admin will be able to change it from his admin panel
+latest meals or may the admin to change it to what he want it to be from his admin panel
 */
 const LMCard = React.memo(function LMCard(props) {
   return (

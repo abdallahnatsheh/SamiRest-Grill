@@ -3,7 +3,7 @@ import Header from "../MainPage/Header";
 import Footer from "../MainPage/Footer";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import "./profile.css";
-import { Button, Card, Container, Spinner, Tab, Tabs } from "react-bootstrap";
+import { Button, Container, Spinner, Tab, Tabs } from "react-bootstrap";
 import { useAuth } from "../../context/AuthContext";
 import * as Yup from "yup";
 import "react-datetime/css/react-datetime.css";
@@ -20,6 +20,45 @@ import {
 import { db, storage } from "../firebase/firebase.Config";
 import { NotificationManager } from "react-notifications";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import BootstrapTable from "react-bootstrap-table-next";
+import paginationFactory from "react-bootstrap-table2-paginator";
+import filterFactory from "react-bootstrap-table2-filter";
+import { useProfileOrdersHook } from "./profileOrdersHook";
+
+const columns = [
+  { dataField: "id", text: "رمز تعريفي", sort: true },
+  { dataField: "date", text: "تاريخ الطلب", sort: true },
+  { dataField: "time", text: "وقت الطلب", sort: true },
+  { dataField: "totalPrice", text: "₪ السعر كاملا ", sort: true },
+  { dataField: "status", text: "حالة الطلب", sort: true },
+];
+const expandRow = {
+  onlyOneExpanding: true,
+  renderer: (row) => (
+    <div>
+      {row.orders.map((order) => (
+        <div key={row.id}>
+          <div>name: {order.name}</div>
+          <div>quantity: {order.quantity}</div>
+          <div>total price :{order.totalPrice}</div>
+          <div>
+            type : name: {order.types.name},value: {order.types.value} nis
+          </div>
+
+          <div>
+            {order.addons
+              ? order.addons.map((addon, index) => (
+                  <div key={index}>
+                    addon {index}: {addon.name}
+                  </div>
+                ))
+              : ""}
+          </div>
+        </div>
+      ))}
+    </div>
+  ),
+};
 //this component used by customers to edit and manage their profile data and picture
 
 const errorStyling = {
@@ -38,6 +77,10 @@ const Profile = React.memo(function Profile() {
   const [image, setImage] = useState(null);
   //get image url after upload to storage
   const [url, setUrl] = useState(null);
+
+  const [orderData] = useProfileOrdersHook();
+  console.log("orderdata", orderData);
+
   //check image type and size allow only jpg and png types that less than 5 mb
   const handleImageChange = (e) => {
     if (e.target.files[0] && e.target.files[0].size < 5242880) {
@@ -54,6 +97,7 @@ const Profile = React.memo(function Profile() {
       }
     }
   };
+
   //upload chosen image to storange in the user directory so every user have his oun storage file
   //then add the link to user data for future use
   const handleSubmit = () => {
@@ -135,18 +179,14 @@ const Profile = React.memo(function Profile() {
                     birthday: moment(values.birthday).format("YYYY-MM-DD"),
                   }).then(
                     NotificationManager.success(
-                      "profile updated successfully",
-                      "Success message",
+                      "تم تحديث الحساب",
+                      "تم بنجاح",
                       5000
                     )
                   );
                 }
               } catch {
-                NotificationManager.error(
-                  "error with the service ",
-                  "Error",
-                  5000
-                );
+                NotificationManager.error("خطأ في الخدمة ", "خطأ", 5000);
               }
 
               actions.setSubmitting(false);
@@ -401,8 +441,25 @@ const Profile = React.memo(function Profile() {
             )}
           </Formik>
         </Tab>
-        <Tab title="Billing" eventKey="Billing">
-          Billing
+        <Tab
+          title="Billing"
+          eventKey="Billing"
+          style={{ background: "white" }}
+          className="container-xl px-4 mt-4"
+        >
+          <BootstrapTable
+            keyField="id"
+            data={orderData}
+            columns={columns}
+            striped
+            hover
+            condensed
+            pagination={paginationFactory()}
+            expandRow={expandRow}
+            defaultSortDirection="asc"
+            noDataIndication="جدول طلباتك فارغ"
+            filter={filterFactory()}
+          />
         </Tab>
         <Tab title="Security" eventKey="Security">
           Security

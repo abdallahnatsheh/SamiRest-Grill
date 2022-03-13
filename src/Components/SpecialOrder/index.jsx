@@ -8,6 +8,7 @@ the special order  form using formik library for ordering meals that are not exi
  name,quantity ,and describtion using regex to detect if theres
 unrequired charachter inserted , it only support arabic and english languages
 its only for customers not for every one so it doesnt contain email or phone numbers
+(it will be edited in future)
 */
 const errorStyling = {
   color: "rgb(255,255,255)",

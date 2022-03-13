@@ -4,6 +4,9 @@ import shopContext from "../../../../context/shop-context";
 import ButtonAddRemoveItem from "../../../ButtonAddRemoveItem";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import "./style.css";
+
+//this modal shows meal addons and types with  dynamic price calculation (need to be fixed in better way in future)
+
 const ShowItemModal = React.memo(function ShowItemModal({
   props,
   onHide,

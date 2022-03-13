@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import "./styles.css";
-
+//this button used to add and remove from the cart with these imported props functions
 const ButtonAddRemoveItem = ({ handleAdd, handleRemove, neededQuantitiy }) => {
   return (
     <div className="btnAddRemove pull-left">

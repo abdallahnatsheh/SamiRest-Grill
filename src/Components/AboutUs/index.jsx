@@ -14,7 +14,7 @@ const headStyle = {
   fontSize: "30px",
   color: "rgb(255, 255, 255)",
 };
-
+//this component shows the restaurant information (may change in future)
 const AboutUs = () => (
   <div className="about-page">
     <Header />
