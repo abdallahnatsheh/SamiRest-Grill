@@ -1,5 +1,7 @@
 export const ADD_PRODUCT = "ADD_PRODUCT";
 export const REMOVE_PRODUCT = "REMOVE_PRODUCT";
+export const EMPTY_CART = "EMPTY_CART";
+
 //add meal to cart ,check if existed will increase the quantity if not add it
 const addProductToCart = (product, state) => {
   const updatedCart = [...state.cart];
@@ -19,6 +21,9 @@ const addProductToCart = (product, state) => {
   }
 
   return { ...state, cart: updatedCart };
+};
+const emptyCart = (state) => {
+  return { ...state, cart: [] };
 };
 //remove item from cart
 const removeProductFromCart = (product, state) => {
@@ -51,6 +56,8 @@ export const shopReducer = (state, action) => {
       return addProductToCart(action.product, state);
     case REMOVE_PRODUCT:
       return removeProductFromCart(action.product, state);
+    case EMPTY_CART:
+      return emptyCart(state);
     default:
       return state;
   }

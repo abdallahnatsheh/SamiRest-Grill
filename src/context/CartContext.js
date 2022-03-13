@@ -1,7 +1,12 @@
 import React, { useEffect, useReducer } from "react";
 
 import ShopContext from "./shop-context";
-import { shopReducer, ADD_PRODUCT, REMOVE_PRODUCT } from "./reducers";
+import {
+  shopReducer,
+  ADD_PRODUCT,
+  REMOVE_PRODUCT,
+  EMPTY_CART,
+} from "./reducers";
 import { useGetMainMenuMeals } from "../Components/firebase/mainMenuHooks/mainMenuHook";
 import useLocalStorage from "../Hooks/useLocalStorage";
 //fix cart list to be  saved in cookies for future use , without it will be alot of bugs
@@ -40,6 +45,9 @@ const CartContext = (props) => {
   const removeProductFromCart = (product) => {
     dispatch({ type: REMOVE_PRODUCT, product: product });
   };
+  const emptyCart = () => {
+    dispatch({ type: EMPTY_CART });
+  };
 
   return (
     <ShopContext.Provider
@@ -48,6 +56,7 @@ const CartContext = (props) => {
         cart: cartState.cart,
         addProductToCart: addProductToCart,
         removeProductFromCart: removeProductFromCart,
+        emptyCart: emptyCart,
       }}
     >
       {props.children}

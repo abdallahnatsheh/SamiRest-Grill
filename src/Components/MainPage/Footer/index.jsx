@@ -5,7 +5,11 @@ const Footer = React.memo(function Footer() {
   return (
     <footer className="footer-basic" style={{ background: "#000000" }}>
       <div className="social">
-        <a href="#">
+        <a
+          href="https://www.instagram.com/sami.restaurant.and.grills/"
+          target="_blank"
+          rel="noreferrer"
+        >
           <i className="icon ion-social-instagram"></i>
         </a>
         <a href="#">
@@ -14,7 +18,11 @@ const Footer = React.memo(function Footer() {
         <a href="#">
           <i className="icon ion-social-twitter"></i>
         </a>
-        <a href="https://www.facebook.com/samiRestgrill/" target="_blank">
+        <a
+          href="https://www.facebook.com/samiRestgrill/"
+          target="_blank"
+          rel="noreferrer"
+        >
           <i className="icon ion-social-facebook"></i>
         </a>
       </div>
@@ -30,9 +38,6 @@ const Footer = React.memo(function Footer() {
         </li>
         <li className="list-inline-item">
           <a href="/menu">قائمة الوجبات</a>
-        </li>
-        <li className="list-inline-item">
-          <a href="#">سياسة الخصوصية</a>
         </li>
       </ul>
       <p className="copyright">Sami Restaurant And Grill © 2021</p>

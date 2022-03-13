@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../MainPage/Header";
 import Footer from "../MainPage/Footer";
 import { Formik, Field, Form, ErrorMessage } from "formik";
@@ -6,6 +6,7 @@ import "./signup.css";
 import { Alert, Container } from "react-bootstrap";
 import * as Yup from "yup";
 import { useAuth } from "../../context/AuthContext";
+import Reaptcha from "reaptcha";
 
 /*sign up form with formik library and regex validations */
 const errorStyling = {
@@ -28,6 +29,11 @@ const Signup = () => {
   const onealpha = /[a-z]/i;
   const onenum = /[0-9~!@#$%^&*()_+\-={}|[\]\\:";'<>?,./]/i;
   const { signUp } = useAuth();
+  const TEST_SITE_KEY = "6LfFnrQeAAAAAOJrOzbsUEjenIEzjwzl92ujj5qB";
+  const [capVerify, setCapVerify] = useState("");
+  const onVerify = () => {
+    setCapVerify(true);
+  };
 
   return (
     <div className="special-order-page">
@@ -39,7 +45,7 @@ const Signup = () => {
           passwordRepeat: "",
         }}
         onSubmit={async (values) => {
-          await signUp(values.email, values.password);
+          if (capVerify) await signUp(values.email, values.password);
         }}
         validationSchema={Yup.object().shape({
           email: Yup.string()
@@ -148,12 +154,12 @@ const Signup = () => {
                     </div>
                   </div>
                 </div>
-
+                <Reaptcha sitekey={TEST_SITE_KEY} onVerify={onVerify} />
                 <button
                   className="btn btn-primary border rounded-pill d-block btn-user w-100"
                   type="submit"
                   style={loginBtnStyle}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !capVerify}
                 >
                   اشتراك
                 </button>

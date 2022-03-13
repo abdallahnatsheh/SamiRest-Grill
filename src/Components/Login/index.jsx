@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../MainPage/Header";
 import Footer from "../MainPage/Footer";
 import { Formik, Field, Form, ErrorMessage } from "formik";
@@ -6,6 +6,7 @@ import "./login.css";
 import { Button, Container } from "react-bootstrap";
 import { useAuth } from "../../context/AuthContext";
 import * as Yup from "yup";
+import Reaptcha from "reaptcha";
 
 const errorStyling = {
   color: "rgb(255,255,255)",
@@ -22,15 +23,21 @@ const fbgmBtnStyle = {
   color: "rgb(0,0,0)",
   bordeWidth: "0px",
 };
+
 /*
 login page with formik form and validation , now its connected with firebase 
 */
 const Login = () => {
   //importing authentication function from authentication context
-  const { login, loginWithGoogle } = useAuth();
+  const { login, loginWithGoogle, loginWithFacebook } = useAuth();
   const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
   const onealpha = /[a-z]/i;
   const onenum = /[0-9~!@#$%^&*()_+\-={}|[\]\\:";'<>?,./]/i;
+  const TEST_SITE_KEY = "6LfFnrQeAAAAAOJrOzbsUEjenIEzjwzl92ujj5qB";
+  const [capVerify, setCapVerify] = useState("");
+  const onVerify = () => {
+    setCapVerify(true);
+  };
 
   return (
     <div className="special-order-page">
@@ -41,7 +48,7 @@ const Login = () => {
           password: "",
         }}
         onSubmit={async (values, actions) => {
-          await login(values.email, values.password);
+          if (capVerify) await login(values.email, values.password);
           actions.setSubmitting(false);
         }}
         validationSchema={Yup.object().shape({
@@ -71,7 +78,6 @@ const Login = () => {
                   <br />
                   <br />
                 </h1>
-
                 <div className="mb-3">
                   <Field
                     id="exampleInputEmail"
@@ -92,7 +98,6 @@ const Login = () => {
                     </div>
                   )}
                 />
-
                 <div className="mb-3">
                   <Field
                     id="exampleInputPassword"
@@ -112,20 +117,15 @@ const Login = () => {
                     </div>
                   )}
                 />
-
-                <div className="mb-3">
-                  <div className="custom-control custom-checkbox small"></div>
-                </div>
-
+                <Reaptcha sitekey={TEST_SITE_KEY} onVerify={onVerify} />
                 <button
                   className="btn btn-primary border rounded-pill d-block btn-user w-100"
                   type="submit"
                   style={loginBtnStyle}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !capVerify}
                 >
                   تسجيل الدخول
                 </button>
-
                 <hr style={{ background: "rgb(0,0,0)" }} />
                 <Button
                   className="btn btn-primary border rounded-pill d-block btn-google btn-user w-100 mb-2"
@@ -139,7 +139,7 @@ const Login = () => {
                   className="btn btn-primary border rounded-pill d-block btn-facebook btn-user w-100"
                   role="button"
                   style={fbgmBtnStyle}
-                  href="#"
+                  onClick={async () => await loginWithFacebook()}
                 >
                   <i className="fab fa-facebook-f"></i>  تسجيل باستخدام فيسبوك
                 </Button>
@@ -148,7 +148,7 @@ const Login = () => {
                   <a
                     className="small"
                     style={{ color: "rgb(255,255,255)" }}
-                    href="/reset-passwsord"
+                    href="/reset-password"
                   >
                     نسيت كلمة المرور ؟
                   </a>

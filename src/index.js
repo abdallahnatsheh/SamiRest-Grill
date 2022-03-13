@@ -7,6 +7,7 @@ import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter } from "react-router-dom";
 import "react-notifications/lib/notifications.css";
+import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
 
 /*
 here i use react redux store provider for the cart and for the menu
