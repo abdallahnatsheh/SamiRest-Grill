@@ -211,7 +211,7 @@ const AuthContext = ({ children }) => {
       setdataUser(querySnapshot ? querySnapshot.docs[0]?.data() : []);
       setCurrentUser(user);
     });
-    console.log("user", currentUser);
+    console.log(currentUser);
   }, []);
 
   const value = {

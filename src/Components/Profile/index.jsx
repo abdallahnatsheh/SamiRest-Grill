@@ -3,7 +3,15 @@ import Header from "../MainPage/Header";
 import Footer from "../MainPage/Footer";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import "./profile.css";
-import { Button, Container, Spinner, Tab, Tabs } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Row,
+  Spinner,
+  Tab,
+  Tabs,
+} from "react-bootstrap";
 import { useAuth } from "../../context/AuthContext";
 import * as Yup from "yup";
 import "react-datetime/css/react-datetime.css";
@@ -22,40 +30,73 @@ import { NotificationManager } from "react-notifications";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
-import filterFactory from "react-bootstrap-table2-filter";
+import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 import { useProfileOrdersHook } from "./profileOrdersHook";
+import { useProfileSpecialOrdersHook } from "./specialOrdersHook";
 
 const columns = [
-  { dataField: "id", text: "رمز تعريفي", sort: true },
+  { dataField: "id", text: "رمز تعريفي", sort: true, filter: textFilter() },
   { dataField: "date", text: "تاريخ الطلب", sort: true },
   { dataField: "time", text: "وقت الطلب", sort: true },
   { dataField: "totalPrice", text: "₪ السعر كاملا ", sort: true },
+  { dataField: "status", text: "حالة الطلب", sort: true },
+];
+const SOcolumns = [
+  { dataField: "id", text: "رمز تعريفي", sort: true, filter: textFilter() },
+  { dataField: "date", text: "تاريخ الطلب", sort: true },
+  { dataField: "time", text: "وقت الطلب", sort: true },
   { dataField: "status", text: "حالة الطلب", sort: true },
 ];
 const expandRow = {
   onlyOneExpanding: true,
   renderer: (row) => (
     <div>
-      {row.orders.map((order) => (
-        <div key={row.id}>
-          <div>name: {order.name}</div>
-          <div>quantity: {order.quantity}</div>
-          <div>total price :{order.totalPrice}</div>
+      <div style={{ textAlign: "right", fontWeight: "bold" }}>:الطلب</div>
+      <div className="grid">{row.id} : الرقم التعريفي</div>
+      {row.orders.map((order, index) => (
+        <div key={index}>
+          <div> اسم الطلب : {order.name} </div>
           <div>
-            type : name: {order.types.name},value: {order.types.value} nis
+            ({order.types.value} nis) نوع الطلب :{order.types.name}
           </div>
-
           <div>
-            {order.addons
-              ? order.addons.map((addon, index) => (
-                  <div key={index}>
-                    addon {index}: {addon.name}
-                  </div>
-                ))
-              : ""}
+            {order.addons.length !== 0 ? (
+              <div>
+                الاضافات: {order.addons.map((addon) => addon.name + ",")}
+              </div>
+            ) : (
+              "بدون اضافات"
+            )}
+          </div>
+          <div>عدد : {order.quantity}</div>
+          <div>
+            {row.notes ? (
+              <div style={{ fontWeight: "bold" }}>ملاحظات :{row.notes}</div>
+            ) : (
+              ""
+            )}
+          </div>
+          <div style={{ fontWeight: "bold" }}>
+            السعر الكلي : {order.totalPrice}
           </div>
         </div>
       ))}
+    </div>
+  ),
+};
+const specialExpandRow = {
+  onlyOneExpanding: true,
+  renderer: (row) => (
+    <div>
+      <div style={{ fontSize: "17px" }}>
+        <div style={{ textAlign: "right", fontWeight: "bold" }}>:الطلب</div>
+        <div className="grid">{row.id} : الرقم التعريفي</div>
+        <div className="grid">اسم الطلب : {row.orders.name} </div>
+        <div className="grid">معلومات الطلب : {row.orders.describtion} </div>
+        <div className="grid" style={{ fontWeight: "bold" }}>
+          كمية الطلب : {row.orders.quantity}{" "}
+        </div>
+      </div>
     </div>
   ),
 };
@@ -69,7 +110,6 @@ const Profile = React.memo(function Profile() {
   const [key, setKey] = useState("Profile");
   //regex for validations
   const arabicRegex = /^[\u0621-\u064A\u0660-\u0669 ]+$/i;
-  const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
   const phoneRegex = /^(972|0)(\-)?0?(([23489]{1}\d{7})|[5]{1}\d{8})$/i;
   //recive user login and data from context
   const { currentUser, dataUser } = useAuth();
@@ -77,9 +117,9 @@ const Profile = React.memo(function Profile() {
   const [image, setImage] = useState(null);
   //get image url after upload to storage
   const [url, setUrl] = useState(null);
-
-  const [orderData] = useProfileOrdersHook();
-  console.log("orderdata", orderData);
+  //get order data from this custom hook
+  const [orders] = useProfileOrdersHook();
+  const [specialOrders] = useProfileSpecialOrdersHook();
 
   //check image type and size allow only jpg and png types that less than 5 mb
   const handleImageChange = (e) => {
@@ -136,6 +176,13 @@ const Profile = React.memo(function Profile() {
   };
   const tabStyle = { color: "rgb(121, 10, 10)" };
   //afte getting user data from context its parsed to be edited
+  const defaultSorted = [
+    {
+      dataField: "date",
+      dataField: "time",
+      order: "desc",
+    },
+  ];
   return dataUser.length !== 0 ? (
     <div>
       <Header />
@@ -148,7 +195,6 @@ const Profile = React.memo(function Profile() {
         <Tab title="ملف شخصي" eventKey="Profile">
           <Formik
             initialValues={{
-              email: dataUser.email ? dataUser.email : "",
               firstName: dataUser.firstName ? dataUser.firstName : "",
               lastName: dataUser.lastName ? dataUser.lastName : "",
               firstAddress: dataUser.firstAddress ? dataUser.firstAddress : "",
@@ -170,7 +216,6 @@ const Profile = React.memo(function Profile() {
                 if (docs.docs.length !== 0) {
                   const userData = doc(db, "users", currentUser.uid);
                   await updateDoc(userData, {
-                    email: values.email,
                     firstName: values.firstName,
                     lastName: values.lastName,
                     firstAddress: values.firstAddress,
@@ -192,10 +237,6 @@ const Profile = React.memo(function Profile() {
               actions.setSubmitting(false);
             }}
             validationSchema={Yup.object().shape({
-              email: Yup.string()
-                .email("البريد الالكتروني غير صالح")
-                .matches(emailRegex, "البريد الالكتروني غير صالح")
-                .required("البريد الالكتروني مطلوب"),
               firstName: Yup.string()
                 .matches(arabicRegex, "الاسم باللغة العربية فقط")
                 .required("الاسم الشخصي مطلوب"),
@@ -359,29 +400,6 @@ const Profile = React.memo(function Profile() {
                               />
                             </div>
                           </div>
-                          <div className="mb-3">
-                            <label
-                              className="small mb-1"
-                              htmlFor="inputEmailAddress"
-                            >
-                              البريد الإلكتروني
-                            </label>
-                            <Field
-                              className="form-control"
-                              id="inputEmailAddress"
-                              type="email"
-                              placeholder="أدخل بريدك الالكتروني"
-                              name="email"
-                            />
-                            <ErrorMessage
-                              name="email"
-                              render={(msg) => (
-                                <div type="invalid" style={errorStyling}>
-                                  {"! " + msg + " *"}
-                                </div>
-                              )}
-                            />
-                          </div>
                           <div className="row gx-3 mb-3">
                             <div className="col-md-6">
                               <label
@@ -442,30 +460,61 @@ const Profile = React.memo(function Profile() {
           </Formik>
         </Tab>
         <Tab
-          title="Billing"
+          title="الطلبات"
           eventKey="Billing"
           style={{ background: "white" }}
           className="container-xl px-4 mt-4"
         >
-          <BootstrapTable
-            keyField="id"
-            data={orderData}
-            columns={columns}
-            striped
-            hover
-            condensed
-            pagination={paginationFactory()}
-            expandRow={expandRow}
-            defaultSortDirection="asc"
-            noDataIndication="جدول طلباتك فارغ"
-            filter={filterFactory()}
-          />
-        </Tab>
-        <Tab title="Security" eventKey="Security">
-          Security
-        </Tab>
-        <Tab title="Notifications" eventKey="Notifications">
-          Notifications
+          <div id="content">
+            <div style={{ alignItems: "center", padding: "10px" }}>
+              <h3 className="text-dark mb-0">الطلبات العامة</h3>
+            </div>
+            {orders ? (
+              <BootstrapTable
+                keyField="id"
+                bootstrap4
+                data={orders}
+                columns={columns}
+                striped
+                hover
+                condensed
+                pagination={paginationFactory()}
+                expandRow={expandRow}
+                defaultSortDirection="asc"
+                noDataIndication="جدول طلباتك فارغ"
+                filter={filterFactory()}
+                bordered={false}
+                defaultSorted={defaultSorted}
+              />
+            ) : (
+              <Spinner />
+            )}
+            <div style={{ alignItems: "center", padding: "10px" }}>
+              <h3 className="text-dark mb-0">الطلبات الخاصة</h3>
+            </div>
+            <div id="content">
+              {specialOrders ? (
+                <BootstrapTable
+                  keyField="id"
+                  bootstrap4
+                  data={specialOrders}
+                  columns={SOcolumns}
+                  striped
+                  hover
+                  condensed
+                  pagination={paginationFactory()}
+                  expandRow={specialExpandRow}
+                  defaultSortDirection="asc"
+                  noDataIndication="جدول طلباتك فارغ"
+                  filter={filterFactory()}
+                  bordered={false}
+                  defaultSorted={defaultSorted}
+                />
+              ) : (
+                <Spinner />
+              )}
+            </div>
+          </div>
         </Tab>
       </Tabs>
 

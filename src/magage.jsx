@@ -22,7 +22,6 @@ function Manage() {
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       user ? setIsLogged(true) : setIsLogged(false);
-      console.log("onAuthStateChanged user", user);
     });
   }, []);
 
