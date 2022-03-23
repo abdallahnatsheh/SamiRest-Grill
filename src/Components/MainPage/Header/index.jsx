@@ -114,10 +114,10 @@ const Header = React.memo(function Header() {
               <IconButton onClick={handleClick} size="small" sx={{ ml: 2 }}>
                 <Avatar
                   sx={{ bgcolor: "#790a0a" }}
-                  src={dataUser.personalImage}
+                  src={dataUser?.personalImage}
                 >
                   {dataUser?.firstName?.charAt(0)?.toUpperCase() ||
-                    dataUser.email?.charAt(0)?.toUpperCase()}
+                    dataUser?.email?.charAt(0)?.toUpperCase()}
                 </Avatar>
                 <div
                   style={{
@@ -167,7 +167,7 @@ const Header = React.memo(function Header() {
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
             <MenuItem onClick={() => navigate("/profile")}>
-              <Avatar sx={{ bgcolor: "#790a0a" }} src={dataUser.personalImage}>
+              <Avatar sx={{ bgcolor: "#790a0a" }} src={dataUser?.personalImage}>
                 {currentUser?.email?.charAt(0)?.toUpperCase()}
               </Avatar>{" "}
               إدارة الحساب

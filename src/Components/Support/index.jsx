@@ -2,6 +2,9 @@ import React from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import Header from "../MainPage/Header";
 import Footer from "../MainPage/Footer";
+import { NotificationManager } from "react-notifications";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../firebase/firebase.Config";
 import "./support.css";
 /*
 the customer support form using formik library for form managing and validations 
@@ -22,13 +25,26 @@ const Support = () => (
         phone: "",
         describtion: "",
       }}
-      onSubmit={(values, actions) => {
-        alert(JSON.stringify(values, null, 2));
+      onSubmit={async (values, actions) => {
+        const orderResult = collection(db, "cSupport");
+        await addDoc(orderResult, {
+          name: values.name,
+          email: values.email,
+          phone: values.phone,
+          describtion: values.describtion,
+        })
+          .then(function () {
+            NotificationManager.success(" تم الطلب بنجاح ", "نجح");
+          })
+          .catch(function () {
+            NotificationManager.warning("خطأ في الخدمة", "خطأ", 1000);
+          });
         actions.setSubmitting(false);
       }}
       validate={(values) => {
         const errors = {};
-        const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+        const emailRegex =
+          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         const nameRegex = /^[a-zA-Z ]*$/i;
         const nameArabicRegex = /^[\u0621-\u064A\u0660-\u0669 ]+$/i;
         const descRegex = /^[a-zA-Z0-9 ]*$/i;
@@ -46,7 +62,7 @@ const Support = () => (
         } else if (!emailRegex.test(values.email)) {
           errors.email = "البريد الالكتروني غير صالح";
         }
-        if (!phoneRegex.test(values.phone) && values.phone) {
+        if (!phoneRegex.test(values.phone) && !values.phone) {
           errors.phone = "رقم الهاتف غير صالح";
         }
         if (!values.describtion) {
@@ -62,7 +78,7 @@ const Support = () => (
         return errors;
       }}
     >
-      {() => (
+      {({ isSubmitting }) => (
         <section className="contact-clean" style={{ background: "rgb(0,0,0)" }}>
           <Form style={{ background: "rgb(121,10,10)" }}>
             <h2 className="text-center" style={{ color: "rgb(255,255,255)" }}>
@@ -160,6 +176,7 @@ const Support = () => (
               <button
                 className="btn btn-primary border rounded-pill"
                 type="submit"
+                disabled={isSubmitting}
               >
                 ارسال
               </button>

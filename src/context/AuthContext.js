@@ -1,5 +1,6 @@
 import {
   GoogleAuthProvider,
+  FacebookAuthProvider,
   signInWithPopup,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
@@ -21,10 +22,12 @@ import {
 } from "firebase/firestore";
 import { NotificationManager } from "react-notifications";
 import { useNavigate } from "react-router-dom";
+
 //this authentication context all the magic happen here
 //create context and create google provider
 const authContext = createContext();
 const googleProvider = new GoogleAuthProvider();
+const facebookProvider = new FacebookAuthProvider();
 
 export const useAuth = () => {
   return useContext(authContext);
@@ -106,10 +109,46 @@ const AuthContext = ({ children }) => {
       const q = query(collection(db, "users"), where("uid", "==", user.uid));
       const docs = await getDocs(q);
       if (docs.docs.length === 0) {
-        await addDoc(collection(db, "users"), {
+        await setDoc(doc(db, "users", user.uid), {
           uid: user.uid,
           name: user.displayName,
           authProvider: "google",
+          email: user.email,
+        });
+      }
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          NotificationManager.error("الإيميل مستخدم بالفعل", "خطأ", 5000);
+          break;
+        case "auth/wrong-password":
+          NotificationManager.error("الايميل او كلمة السر خطأ", "خطأ", 5000);
+          break;
+        case "auth/user-not-found":
+          NotificationManager.error("المستخدم غير مسجل", "خطأ", 5000);
+          break;
+        case "auth/popup-closed-by-user":
+          NotificationManager.error("المستخدم  اغلق التسجيل", "خطأ", 5000);
+          break;
+        default:
+          NotificationManager.error("خطأ في الخدمة", "خطأ", 5000);
+          break;
+      }
+    }
+  };
+  const loginWithFacebook = async () => {
+    try {
+      const res = await signInWithPopup(auth, facebookProvider);
+      const user = res.user;
+      const q = query(collection(db, "users"), where("uid", "==", user.uid));
+      const docs = await getDocs(q);
+      if (docs.docs.length === 0) {
+        await setDoc(doc(db, "users", user.uid), {
+          uid: user.uid,
+          name: user.displayName,
+          authProvider: "facebook",
           email: user.email,
         });
       }
@@ -144,7 +183,6 @@ const AuthContext = ({ children }) => {
     try {
       await sendPasswordResetEmail(auth, email);
     } catch (error) {
-      console.error(error);
       switch (error.code) {
         case "auth/email-already-in-use":
           NotificationManager.error("الإيميل مستخدم بالفعل", "خطأ", 5000);
@@ -166,13 +204,14 @@ const AuthContext = ({ children }) => {
   ///hook to manage logged user data and if he is logged or not, changed if the user changed
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
-      setCurrentUser(user);
       const q = user
         ? query(collection(db, "users"), where("uid", "==", user?.uid))
         : "";
       const querySnapshot = q ? await getDocs(q) : "";
       setdataUser(querySnapshot ? querySnapshot.docs[0]?.data() : []);
+      setCurrentUser(user);
     });
+    console.log(currentUser);
   }, []);
 
   const value = {
@@ -182,6 +221,7 @@ const AuthContext = ({ children }) => {
     login,
     logout,
     loginWithGoogle,
+    loginWithFacebook,
     resetPassword,
   };
   return <authContext.Provider {...{ value }}>{children}</authContext.Provider>;

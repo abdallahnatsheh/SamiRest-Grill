@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../MainPage/Header";
 import Footer from "../MainPage/Footer";
 import { Formik, Field, Form, ErrorMessage } from "formik";
@@ -6,6 +6,7 @@ import "./resetpass.css";
 import { Container } from "react-bootstrap";
 import { useAuth } from "../../context/AuthContext";
 import * as Yup from "yup";
+import Reaptcha from "reaptcha";
 
 const errorStyling = {
   color: "rgb(255,255,255)",
@@ -24,7 +25,11 @@ reset password page to change the password
 const ResetPass = () => {
   const { resetPassword } = useAuth();
   const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-
+  const TEST_SITE_KEY = "6LfFnrQeAAAAAOJrOzbsUEjenIEzjwzl92ujj5qB";
+  const [capVerify, setCapVerify] = useState("");
+  const onVerify = () => {
+    setCapVerify(true);
+  };
   return (
     <div className="special-order-page">
       <Header />
@@ -82,12 +87,12 @@ const ResetPass = () => {
                 <div className="mb-3">
                   <div className="custom-control custom-checkbox small"></div>
                 </div>
-
+                <Reaptcha sitekey={TEST_SITE_KEY} onVerify={onVerify} />
                 <button
                   className="btn btn-primary border rounded-pill d-block btn-user w-100"
                   type="submit"
                   style={loginBtnStyle}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !capVerify}
                   onClick={async () => await resetPassword()}
                 >
                   تغيير كلمة المرور
