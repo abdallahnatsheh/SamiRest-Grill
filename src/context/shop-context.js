@@ -1,5 +1,5 @@
 import React from "react";
-
+//main context for the menu
 export default React.createContext({
   products: [],
   cart: [],

@@ -10,6 +10,8 @@ import { useContext } from "react";
 import shopContext from "../../../context/shop-context";
 import { useNavigate } from "react-router-dom";
 
+//this is the checkout dialog popup that displays the meals in cart in detail
+//and handle the checkout for every customer (for now without payment gateway)
 const OrderStyled = styled.div`
   position: fixed;
   right: 0px;
@@ -75,7 +77,11 @@ const Order = ({ orders, handleClose }) => {
   let cartTotal = 0;
   orders.map((item) => (cartTotal += item.totalPrice));
   const [notes, setNotes] = useState("");
-  const isValid = notes.trim().length >= 0 && notes.trim().length < 500;
+  const [orderType, setOrderType] = useState("");
+  const isValid =
+    notes.trim().length >= 0 &&
+    notes.trim().length < 500 &&
+    orderType.length > 0;
   const { currentUser, dataUser } = useAuth();
 
   const handleSubmit = async (event) => {
@@ -107,6 +113,7 @@ const Order = ({ orders, handleClose }) => {
       status: "وضع الانتظار",
       orderTime: time,
       orderDate: date,
+      orderType: orderType,
     })
       .then(function () {
         context.emptyCart();
@@ -146,6 +153,27 @@ const Order = ({ orders, handleClose }) => {
               <div>{cartTotal}₪</div>
             </OrderItem>
           </OrderContainer>
+          <OrderContainer>
+            <div> نوع الطلبية</div>
+          </OrderContainer>
+          <Form.Check
+            name="type-radio"
+            label="حجز"
+            value="reserve"
+            onChange={(e) => setOrderType(e.target.value)}
+            type="radio"
+            dir="rtl"
+            style={{ margin: "10px" }}
+          />
+          <Form.Check
+            name="type-radio"
+            label="توصيل"
+            value="deliver"
+            onChange={(e) => setOrderType(e.target.value)}
+            type="radio"
+            dir="rtl"
+            style={{ margin: "10px" }}
+          />
           <OrderContainer>
             <div> ملاحظات قبل الطلب</div>
           </OrderContainer>

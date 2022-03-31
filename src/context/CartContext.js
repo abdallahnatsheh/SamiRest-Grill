@@ -37,7 +37,8 @@ const CartContext = (props) => {
       setStorageCart(cartState);
     }
   }, [cartState]);
-
+  //cart functions dispatch
+  //takes the product that wanted to be worked with and send it to dispatch function
   const addProductToCart = (product) => {
     dispatch({ type: ADD_PRODUCT, product: product });
   };

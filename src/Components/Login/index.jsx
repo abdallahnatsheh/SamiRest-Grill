@@ -29,7 +29,7 @@ login page with formik form and validation , now its connected with firebase
 */
 const Login = () => {
   //importing authentication function from authentication context
-  const { login, loginWithGoogle, loginWithFacebook } = useAuth();
+  const { login, loginWithGoogle } = useAuth();
   const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
   const onealpha = /[a-z]/i;
   const onenum = /[0-9~!@#$%^&*()_+\-={}|[\]\\:";'<>?,./]/i;
@@ -134,14 +134,6 @@ const Login = () => {
                   onClick={async () => await loginWithGoogle()}
                 >
                   <i className="fab fa-google"></i>  تسجيل باستخدام جوجل
-                </Button>
-                <Button
-                  className="btn btn-primary border rounded-pill d-block btn-facebook btn-user w-100"
-                  role="button"
-                  style={fbgmBtnStyle}
-                  onClick={async () => await loginWithFacebook()}
-                >
-                  <i className="fab fa-facebook-f"></i>  تسجيل باستخدام فيسبوك
                 </Button>
                 <hr style={{ background: "rgb(0,0,0)" }} />
                 <div className="text-center">

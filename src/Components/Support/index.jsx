@@ -10,6 +10,8 @@ import "./support.css";
 the customer support form using formik library for form managing and validations 
 the form perform check on email , name , password using regex to detect if theres
 unrequired charachter inserted , it only support arabic and english languages
+
+any user even if he's not signed in cant fill the customer support form and send it 
 */
 const errorStyling = {
   color: "rgb(255,255,255)",

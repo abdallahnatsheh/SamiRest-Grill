@@ -66,3 +66,9 @@ label {
   background-color: rgb(121, 10, 10);
   border-radius: 12px;
 }
+.react-bootstrap-table-pagination-list
+  .react-bootstrap-table-page-btns-ul
+  .page-item
+  .page-link {
+  background: rgb(156 33 33);
+}

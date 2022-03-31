@@ -2,7 +2,28 @@
   width: relative;
   height: 70rem;
 }
-
+.modal-dialog .meal-modal {
+  background: #d28d08;
+}
+.modal-footer .btn {
+  background: #790a0a;
+}
+.modal-footer .btn:hover {
+  background: #790a0a;
+}
+.modal-footer .btn:focus {
+  background: #790a0a;
+}
+.btnAddRemove .btn {
+  background: #790a0a;
+}
+.btnAddRemove .btnAddRemove-positive .btn {
+  background: #790a0a;
+}
+.form-check .form-check-input:checked {
+  background-color: #000000;
+  border-color: #000000;
+}
 .item-modal {
   position: relative;
   justify-items: center;
@@ -20,4 +41,7 @@
   margin: 25px auto;
   color: black;
   font-size: 18px;
+}
+.card-meal-image {
+  border-radius: 10px;
 }

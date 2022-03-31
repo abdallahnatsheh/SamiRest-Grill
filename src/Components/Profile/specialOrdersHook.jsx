@@ -3,8 +3,8 @@ import { db } from "../firebase/firebase.Config";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useAuth } from "../../context/AuthContext";
 /*
-custom hook used to get main menu meals from firestore uses useeffect hook to fetch the data 
-also uses onsnapshot from firestore to update the wesite if there is any change in the menu database
+custom hook used to get special  orders of specific user
+
 */
 export const useProfileSpecialOrdersHook = () => {
   const [documents, setDocuments] = useState([]);

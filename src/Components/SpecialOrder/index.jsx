@@ -7,6 +7,8 @@ import "./specialorder.css";
 import { db } from "../firebase/firebase.Config";
 import { addDoc, collection } from "firebase/firestore";
 import { NotificationManager } from "react-notifications";
+import { useNavigate } from "react-router-dom";
+
 /*
 the special order  form using formik library for ordering meals that are not existed in the menu 
  name,quantity ,and describtion using regex to detect if theres
@@ -19,7 +21,9 @@ const errorStyling = {
 };
 
 const SpecialOrder = () => {
-  const { dataUser } = useAuth();
+  const { currentUser, dataUser } = useAuth();
+  const navigate = useNavigate();
+
   return (
     <div className="special-order-page">
       <Header />
@@ -30,8 +34,11 @@ const SpecialOrder = () => {
           describtion: "",
         }}
         onSubmit={(values, actions) => {
-          var today = new Date();
-
+          const today = new Date(
+            Date("he-IL", {
+              timeZone: "Asia/Jerusalem",
+            })
+          );
           var date =
             today.getFullYear() +
             "-" +
@@ -166,16 +173,26 @@ const SpecialOrder = () => {
                   </div>
                 )}
               />
-
-              <div className="mb-3">
-                <button
-                  className="btn btn-primary border rounded-pill"
-                  type="submit"
-                  disabled={isSubmitting}
-                >
-                  ارسال
-                </button>
-              </div>
+              {currentUser ? (
+                <div className="mb-3">
+                  <button
+                    className="btn btn-primary border rounded-pill"
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
+                    ارسال
+                  </button>
+                </div>
+              ) : (
+                <div className="mb-3">
+                  <button
+                    className="btn btn-primary border rounded-pill"
+                    onClick={() => navigate("/login")}
+                  >
+                    سجل دخولك
+                  </button>
+                </div>
+              )}
             </Form>
           </section>
         )}
