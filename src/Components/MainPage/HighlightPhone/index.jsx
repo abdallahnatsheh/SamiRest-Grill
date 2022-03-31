@@ -13,6 +13,7 @@ const imageStyle = {
   marginTop: "-20px",
   marginBottom: "-230px",
   height: " 525.513px",
+  width: "500px",
 };
 /*
 this component shows that the resturant will have application on smart phones

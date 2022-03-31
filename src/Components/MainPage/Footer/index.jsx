@@ -3,7 +3,12 @@ import "./footer.css";
 //this is the website footer it will   be edited in future
 const Footer = React.memo(function Footer() {
   return (
-    <footer className="footer-basic" style={{ background: "#000000" }}>
+    <footer
+      className="footer-basic"
+      style={{
+        background: "#000000",
+      }}
+    >
       <div className="social">
         <a
           href="https://www.instagram.com/sami.restaurant.and.grills/"

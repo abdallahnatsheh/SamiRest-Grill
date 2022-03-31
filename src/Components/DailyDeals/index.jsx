@@ -1,21 +1,32 @@
 import React, { useRef } from "react";
 import Header from "../MainPage/Header";
 import Footer from "../MainPage/Footer";
+import shopContext from "../../context/shop-context";
 import DDMenu from "../DailyDeals/DDMenu";
 import { menuItemsData } from "../Menu/data";
+import { Spinner } from "react-bootstrap";
 /*
-daily deals now looks the same as menu but will be edited to match the deals daily deals only (need to be fixed )
+daily deals menu shows only meals that have a daily deal 
 */
 const DailyDeals = () => {
-  const menuDailyRef = useRef();
-  //      <DDMenu list={menuItemsData} ref={menuDailyRef} />
-
   return (
-    <div className="deals-page">
-      <Header />
-      <div style={{ color: "white" }}>Under Construction</div>
-      <Footer />
-    </div>
+    <shopContext.Consumer>
+      {(context) => (
+        <div>
+          <Header />
+          {context.products.length !== 0 ? (
+            <DDMenu list={context.products} />
+          ) : (
+            <Spinner />
+          )}
+          <div
+            style={{ position: "fixed", left: "0", right: "0", bottom: "0" }}
+          >
+            <Footer />
+          </div>
+        </div>
+      )}
+    </shopContext.Consumer>
   );
 };
 

@@ -3,7 +3,7 @@ import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 import { useField } from "formik";
 import moment from "moment";
-//component used to pick user birthday date
+//component used to make user pick a date
 // Styles
 const MyDatePicker = ({ name = "" }) => {
   const [field, meta, helpers] = useField(name);

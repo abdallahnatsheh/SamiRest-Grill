@@ -1,9 +1,9 @@
 import React, { useState, useContext } from "react";
-import { Button, Card, Modal, Badge, Form } from "react-bootstrap";
+import { Button, Modal, Badge, Form, Image, Container } from "react-bootstrap";
 import shopContext from "../../../../context/shop-context";
 import ButtonAddRemoveItem from "../../../ButtonAddRemoveItem";
-import { AiOutlineCloseCircle } from "react-icons/ai";
 import "./style.css";
+import { useNavigate } from "react-router-dom";
 
 //this modal shows meal addons and types with  dynamic price calculation (need to be fixed in better way in future)
 
@@ -20,7 +20,14 @@ const ShowItemModal = React.memo(function ShowItemModal({
   //have radio form types
   const [foodTypeValue, setFoodTypeValue] = useState([]);
   // item quantity want to add to cart
-  const [neededQuantitiy, setneededQuantitiy] = useState(1);
+  const [neededQuantitiy, setneededQuantitiy] = useState(0);
+  const today = new Date(
+    Date("he-IL", {
+      timeZone: "Asia/Jerusalem",
+    })
+  );
+  const navigate = useNavigate();
+
   //calculate final price
   const handleFinalPrice = (foodTypeAddon, foodTypeValue, neededQuantitiy) => {
     let TypeSum = 0;
@@ -38,7 +45,14 @@ const ShowItemModal = React.memo(function ShowItemModal({
     let sum =
       (foodTypeValue.value ? foodTypeValue.value + TypeSum : 0 + TypeSum) *
       (neededQuantitiy + handleQuantity(item.id));
-    let finalprice = deals.enabled ? sum - (sum * deals.value) / 100 : sum;
+    let finalprice =
+      (deals.enabled && !deals.dailyDealEnable) ||
+      (deals.enabled &&
+        deals.dailyDealEnable &&
+        today >= new Date(item.deals.fromDate.seconds * 1000) &&
+        today < new Date(item.deals.toDate.seconds * 1000))
+        ? sum - (sum * deals.value) / 100
+        : sum;
     return finalprice;
   };
 
@@ -83,6 +97,7 @@ const ShowItemModal = React.memo(function ShowItemModal({
     };
     return order;
   };
+
   return (
     <Modal
       {...props}
@@ -95,24 +110,33 @@ const ShowItemModal = React.memo(function ShowItemModal({
         setneededQuantitiy(0);
       }}
       show={showit}
+      backdrop="false"
+      keyboard="true"
     >
-      <Modal.Header onClick={onHide}>
-        <AiOutlineCloseCircle
-          onClick={onHide}
-          style={{ height: "30px", width: "32px" }}
-        ></AiOutlineCloseCircle>{" "}
-      </Modal.Header>{" "}
-      <Modal.Body id={item.id}>
-        <Card className="item-modal" border="light">
-          <Card.Img className="card-meal-image" variant="top" src={img} />
-          <Card.Body>
-            <Card.Text className="meal-modal-text">
-              <Badge bg="warning">
-                {deals.enabled ? deals.value + "%" : ""}
-              </Badge>{" "}
-              {name}
-            </Card.Text>
-            <Card.Text>{info}</Card.Text>
+      <Modal.Header onClick={onHide} closeButton />
+      <Modal.Body id={item.id} style={{ height: "100%" }}>
+        <Container className="item-modal" border="light">
+          <Image className="card-meal-image" variant="top" src={img} />
+          <div style={{ height: "100%" }}>
+            {item.deals.enabled && !item.deals.dailyDealEnable ? (
+              <div className="meal-modal-text">
+                <Badge bg="warning">{"-" + deals.value + "%"}</Badge> {name}
+              </div>
+            ) : item.deals.dailyDealEnable &&
+              item.deals.enabled &&
+              today >= new Date(item.deals.fromDate.seconds * 1000) &&
+              today < new Date(item.deals.toDate.seconds * 1000) ? (
+              <div className="meal-modal-text">
+                <Badge bg="light" style={{ color: "black" }}>
+                  {"-" + deals.value + "%"}
+                </Badge>{" "}
+                {name}
+              </div>
+            ) : (
+              <div className="meal-modal-text">{name}</div>
+            )}
+
+            <div>{info}</div>
             <Form dir="rtl" id="type-form">
               {!price.defaultPrice.enabled ? (
                 <div className="mb-3" dir="rtl">
@@ -178,35 +202,41 @@ const ShowItemModal = React.memo(function ShowItemModal({
                 ""
               )}
             </Form>
-          </Card.Body>
-        </Card>
+          </div>
+        </Container>
       </Modal.Body>
       <Modal.Footer>
         {handleQuantity(item.id) <= 0 ? (
           ""
         ) : (
-          <Button variant="primary">
-            <Badge bg="secondary">{handleQuantity(item.id)}</Badge> :في السلة
-          </Button>
+          <div>
+            <Button
+              disabled={handleQuantity(item.id) < 1}
+              onClick={context.removeProductFromCart.bind(this, item)}
+            >
+              حذف
+            </Button>{" "}
+            <Button variant="primary" onClick={() => navigate("/cart")}>
+              <Badge bg="secondary">{handleQuantity(item.id)}</Badge> :في السلة
+            </Button>
+          </div>
         )}
         <ButtonAddRemoveItem
           neededQuantitiy={neededQuantitiy}
           handleAdd={() => setneededQuantitiy(neededQuantitiy + 1)}
           handleRemove={() => setneededQuantitiy(neededQuantitiy - 1)}
         />
-        <Button onClick={context.addProductToCart.bind(this, makeOrder())}>
-          {handleFinalPrice(foodTypeAddon, foodTypeValue, neededQuantitiy) !== 0
-            ? "₪" +
+
+        {handleFinalPrice(foodTypeAddon, foodTypeValue, neededQuantitiy) !==
+        0 ? (
+          <Button onClick={context.addProductToCart.bind(this, makeOrder())}>
+            {"₪" +
               handleFinalPrice(foodTypeAddon, foodTypeValue, neededQuantitiy) +
-              "  سعر كامل"
-            : "إختر وجبتك"}
-        </Button>
-        <Button
-          disabled={handleQuantity(item.id) < 1}
-          onClick={context.removeProductFromCart.bind(this, item)}
-        >
-          حذف من السلة
-        </Button>
+              " سعر كامل"}
+          </Button>
+        ) : (
+          <Button>إختر وجبتك</Button>
+        )}
       </Modal.Footer>
     </Modal>
   );

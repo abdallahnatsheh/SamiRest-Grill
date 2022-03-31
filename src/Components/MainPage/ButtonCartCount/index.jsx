@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "./styles.css";
 /*
 cart button component that shows  how many items in the cart 
+its existed in navbar
 */
 const ButtonCartCount = React.memo(function ButtonCartCount() {
   const context = useContext(shopContext);

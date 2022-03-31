@@ -3,15 +3,7 @@ import Header from "../MainPage/Header";
 import Footer from "../MainPage/Footer";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import "./profile.css";
-import {
-  Button,
-  Col,
-  Container,
-  Row,
-  Spinner,
-  Tab,
-  Tabs,
-} from "react-bootstrap";
+import { Button, Container, Spinner, Tab, Tabs } from "react-bootstrap";
 import { useAuth } from "../../context/AuthContext";
 import * as Yup from "yup";
 import "react-datetime/css/react-datetime.css";
@@ -34,6 +26,7 @@ import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 import { useProfileOrdersHook } from "./profileOrdersHook";
 import { useProfileSpecialOrdersHook } from "./specialOrdersHook";
 
+// order table colums
 const columns = [
   { dataField: "id", text: "رمز تعريفي", sort: true, filter: textFilter() },
   { dataField: "date", text: "تاريخ الطلب", sort: true },
@@ -41,12 +34,19 @@ const columns = [
   { dataField: "totalPrice", text: "₪ السعر كاملا ", sort: true },
   { dataField: "status", text: "حالة الطلب", sort: true },
 ];
+//special orders table columns
 const SOcolumns = [
   { dataField: "id", text: "رمز تعريفي", sort: true, filter: textFilter() },
   { dataField: "date", text: "تاريخ الطلب", sort: true },
   { dataField: "time", text: "وقت الطلب", sort: true },
   { dataField: "status", text: "حالة الطلب", sort: true },
 ];
+//types of orders
+const types = {
+  deliver: "توصيل",
+  reserve: "حجز",
+};
+//display order info from the orders table
 const expandRow = {
   onlyOneExpanding: true,
   renderer: (row) => (
@@ -55,9 +55,9 @@ const expandRow = {
       <div className="grid">{row.id} : الرقم التعريفي</div>
       {row.orders.map((order, index) => (
         <div key={index}>
-          <div> اسم الطلب : {order.name} </div>
+          <div> اسم الوجبة : {order.name} </div>
           <div>
-            ({order.types.value} nis) نوع الطلب :{order.types.name}
+            ({order.types.value} nis) نوع الوجبة :{order.types.name}
           </div>
           <div>
             {order.addons.length !== 0 ? (
@@ -77,6 +77,9 @@ const expandRow = {
             )}
           </div>
           <div style={{ fontWeight: "bold" }}>
+            نوع الطلب : {types[row.orderType]}
+          </div>
+          <div style={{ fontWeight: "bold" }}>
             السعر الكلي : {order.totalPrice}
           </div>
         </div>
@@ -84,6 +87,7 @@ const expandRow = {
     </div>
   ),
 };
+//diplay special order info from the special orders table
 const specialExpandRow = {
   onlyOneExpanding: true,
   renderer: (row) => (
@@ -100,11 +104,12 @@ const specialExpandRow = {
     </div>
   ),
 };
-//this component used by customers to edit and manage their profile data and picture
 
 const errorStyling = {
   color: "rgb(0,0,0)",
 };
+//this component used by customers to edit and manage their profile data and picture
+
 const Profile = React.memo(function Profile() {
   //used for tab navbar
   const [key, setKey] = useState("Profile");
@@ -179,10 +184,10 @@ const Profile = React.memo(function Profile() {
   const defaultSorted = [
     {
       dataField: "date",
-      dataField: "time",
       order: "desc",
     },
   ];
+  //here it will display the tabs that contains profile data and orders
   return dataUser.length !== 0 ? (
     <div>
       <Header />
@@ -462,10 +467,10 @@ const Profile = React.memo(function Profile() {
         <Tab
           title="الطلبات"
           eventKey="Billing"
-          style={{ background: "white" }}
+          style={{ background: "rgb(217 154 32)" }}
           className="container-xl px-4 mt-4"
         >
-          <div id="content">
+          <div id="content" style={{ background: "rgb(217 154 32)" }}>
             <div style={{ alignItems: "center", padding: "10px" }}>
               <h3 className="text-dark mb-0">الطلبات العامة</h3>
             </div>

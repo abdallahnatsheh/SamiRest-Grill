@@ -12,7 +12,7 @@ import { useGetSwipperData } from "../firebase/mainPageHooks/swapperHook";
 import { useGetgalleryData } from "../firebase/mainPageHooks/mpgalleryHook";
 import React from "react";
 /*
-main page component that put everything togather
+main page component that put everything togather diplay loading screen until all the required data is fetched from firestore
 */
 const MainPage = React.memo(function MainPage() {
   //recieving header and cards from custom hook that fetch the data from firebase firestore

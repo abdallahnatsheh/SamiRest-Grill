@@ -7,6 +7,9 @@
   flex-direction: column;
   display: flex;
 }
+#menuImages {
+  border-radius: 10px;
+}
 .item-food-discount {
   margin: 5px;
 }
