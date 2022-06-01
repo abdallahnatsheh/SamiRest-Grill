@@ -5,6 +5,9 @@ url : https://github.com/abdallahnatsheh/SamiRest-Grill-AdminPanel
 # SamiRest-Grill-Customer-App
 Customer mobile application basically for android and optionally for ios </br>
 url: https://github.com/abdallahnatsheh/SamiRest-Grill-Customer-App
+# SamiRest-Grill-delivery-App
+only for delivery employees mobile application  basically for android and optionally for ios </br>
+url: https://github.com/abdallahnatsheh/SamiRest-Grill-delivery-App
 ## Available Scripts
 
 In the project directory, you can run:
