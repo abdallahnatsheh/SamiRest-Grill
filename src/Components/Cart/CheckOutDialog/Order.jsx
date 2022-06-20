@@ -9,6 +9,7 @@ import { NotificationManager } from "react-notifications";
 import { useContext } from "react";
 import shopContext from "../../../context/shop-context";
 import { useNavigate } from "react-router-dom";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 //this is the checkout dialog popup that displays the meals in cart in detail
 //and handle the checkout for every customer (for now without payment gateway)
@@ -33,7 +34,7 @@ const DialogContent = styled.div`
 
 const DialogFooter = styled.div`
   box-shadow: 0px -2px 10px 0px grey;
-  height: 60px;
+  height: 50%;
   display: flex;
   justify-content: center;
 `;
@@ -86,6 +87,45 @@ const Order = ({ orders, handleClose }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    var today = new Date();
+
+    var date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
+    var time =
+      today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    const orderResult = collection(db, "orders");
+    addDoc(orderResult, {
+      orders: orders,
+      notes: notes,
+      cartTotal: cartTotal,
+      dataUser: {
+        firstName: dataUser.firstName,
+        lastName: dataUser.lastName,
+        firstAddress: dataUser.firstAddress,
+        secondAddress: dataUser.secondAddress,
+        phoneNumber: dataUser.phoneNumber,
+        email: dataUser.email,
+        uid: dataUser.uid,
+      },
+      status: "وضع الانتظار",
+      orderTime: time,
+      orderDate: date,
+      orderType: orderType,
+    })
+      .then(function () {
+        context.emptyCart();
+        NotificationManager.success(" تم الطلب بنجاح ", "نجح");
+        navigate("/menu");
+      })
+      .catch(function () {
+        NotificationManager.warning("خطأ في الخدمة", "خطأ", 1000);
+      });
+  };
+  const handleppSubmit = async () => {
     var today = new Date();
 
     var date =
@@ -185,20 +225,52 @@ const Order = ({ orders, handleClose }) => {
             onChange={(event) => setNotes(event.target.value)}
           />
         </OrderContent>
-        <DialogFooter>
+        <DialogFooter style={{ overflowY: "scroll" }}>
           {!currentUser ? (
             <Button style={{ width: "100%" }} variant="warning" href="/login">
               سجل دخولك اولاً
             </Button>
           ) : (
-            <Button
-              style={{ width: "100%" }}
-              variant="warning"
-              disabled={!isValid}
-              type="submit"
-            >
-              الدفع
-            </Button>
+            <div style={{ padding: 20 }}>
+              <Button
+                style={{ width: "100%" }}
+                variant="warning"
+                disabled={!isValid}
+                type="submit"
+              >
+                الدفع
+              </Button>
+              <br></br> <br></br>
+              {isValid && (
+                <PayPalScriptProvider
+                  style={{ padding: 20 }}
+                  options={{
+                    "client-id":
+                      "Adt2tyKxwvbs_rPLoTatiSuU_OTegVmrQitcifPxCXPZe-Q12wH4702af1REpMgRLiXFmnYjKPVEBFhT",
+                    currency: "ILS",
+                  }}
+                >
+                  <PayPalButtons
+                    createOrder={(data, actions) => {
+                      return actions.order.create({
+                        purchase_units: [
+                          {
+                            amount: {
+                              value: cartTotal,
+                            },
+                          },
+                        ],
+                      });
+                    }}
+                    onApprove={(data, actions) => {
+                      return actions.order.capture().then(() => {
+                        handleppSubmit();
+                      });
+                    }}
+                  />
+                </PayPalScriptProvider>
+              )}
+            </div>
           )}
         </DialogFooter>
       </OrderStyled>

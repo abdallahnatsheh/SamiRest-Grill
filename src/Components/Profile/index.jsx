@@ -240,7 +240,8 @@ const Profile = React.memo(function Profile() {
               }
 
               actions.setSubmitting(false);
-            }}
+            }
+          }
             validationSchema={Yup.object().shape({
               firstName: Yup.string()
                 .matches(arabicRegex, "الاسم باللغة العربية فقط")

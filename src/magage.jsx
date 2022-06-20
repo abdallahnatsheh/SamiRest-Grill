@@ -15,6 +15,8 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { auth } from "../src/Components/firebase/firebase.Config";
 import { onAuthStateChanged } from "firebase/auth";
+import PrivacyPolicy from "./Components/PrivacyPolicy";
+import Terms from "./Components/Terms/Terms";
 
 function Manage() {
   const [isLogged, setIsLogged] = useState(null);
@@ -46,6 +48,8 @@ function Manage() {
         />
         <Route exact path="/about-us" element={<AboutUs />} />
         <Route exact path="/support" element={<Support />} />
+        <Route exact path="/privacy" element={<PrivacyPolicy />} />
+        <Route exact path="/terms" element={<Terms />} />
         <Route exact path="/menu" element={<MenuPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
