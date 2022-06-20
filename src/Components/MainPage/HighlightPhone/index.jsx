@@ -26,13 +26,10 @@ const HighlightPhone = React.memo(function HighlightPhone() {
           <Col>
             <h2>
               <br />
-              <strong>
-                <Badge bg="dark">!قريبا </Badge> تطبيق شامل لخدمات المطعم
-              </strong>
+              <strong>تطبيق شامل لخدمات المطعم</strong>
               <br />
             </h2>
             <p>
-              {" "}
               جوعان؟ السعادة على بعد نقرة واحدة ، جرب الأفضل في منطقتك حتى عتبة
               داركم. لا يوجد عنوان شارع؟ لا مشكلة! السائقين في طريقهم. مع
               امكانية متابعة طلباتكم بشكل حي على الخريطة
@@ -40,11 +37,10 @@ const HighlightPhone = React.memo(function HighlightPhone() {
             <br />
             <Button
               style={btnStyle}
-              href="https://play.google.com/store/apps"
+              href="https://play.google.com/store/apps/details?id=com.abdallahna.samiResaurantapp"
               target="_blank"
-              disabled
             >
-              ! حمله قريبا
+              ! حمله الاّن
             </Button>
             <br />
           </Col>

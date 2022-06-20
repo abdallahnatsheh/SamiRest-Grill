@@ -148,8 +148,8 @@ const Signup = () => {
                     <div className="form-check" name="acceptTerms">
                       <label style={labelStyle}>
                         عند تسجيل الاشتراك فأنت توافق على اتفاقية
-                        <Alert.Link href=""> الترخيص</Alert.Link> و
-                        <Alert.Link href="">الخصوصية</Alert.Link>
+                        <Alert.Link href="/terms"> الترخيص</Alert.Link> و
+                        <Alert.Link href="/privacy">الخصوصية</Alert.Link>
                       </label>
                     </div>
                   </div>
