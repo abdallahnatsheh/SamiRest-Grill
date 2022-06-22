@@ -4,17 +4,24 @@ import Badge from "react-bootstrap/Badge";
 import ShowItemModal from "./ShowItemModal";
 import "./styles.css";
 import shopContext from "../../../context/shop-context";
+import axios from "axios";
 /**
  * this component build item menu after recieving it from firestore
  */
 
 const MenuItem = ({ list }) => {
   //takes the time of israel to check for daily deals
-  const today = new Date(
-    Date("he-IL", {
-      timeZone: "Asia/Jerusalem",
-    })
-  );
+  const [today, setToday] = useState();
+  React.useEffect(() => {
+    function getCurrentTime() {
+      axios
+        .get(`http://worldtimeapi.org/api/timezone/Asia/Jerusalem`)
+        .then((res) => {
+          setToday(JSON.stringify(res.data.datetime).slice(1, -1));
+        });
+    }
+    getCurrentTime();
+  }, []);
   //submit the chosen item to be shown in the modal dialog
   function showItem(item) {
     setFood(item);

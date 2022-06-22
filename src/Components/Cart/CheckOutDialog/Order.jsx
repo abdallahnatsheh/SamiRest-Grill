@@ -10,7 +10,7 @@ import { useContext } from "react";
 import shopContext from "../../../context/shop-context";
 import { useNavigate } from "react-router-dom";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-
+import axios from "axios";
 //this is the checkout dialog popup that displays the meals in cart in detail
 //and handle the checkout for every customer (for now without payment gateway)
 const OrderStyled = styled.div`
@@ -84,19 +84,28 @@ const Order = ({ orders, handleClose }) => {
     notes.trim().length < 500 &&
     orderType.length > 0;
   const { currentUser, dataUser } = useAuth();
-
+  const [today, setToday] = useState();
+  React.useEffect(() => {
+    function getCurrentTime() {
+      axios
+        .get(`http://worldtimeapi.org/api/timezone/Asia/Jerusalem`)
+        .then((res) => {
+          setToday(JSON.stringify(res.data.datetime).slice(1, -1));
+        });
+    }
+    getCurrentTime();
+  }, []);
+  function getTime() {
+    var todays = String(today).slice(11, 19);
+    console.log(todays);
+    return todays;
+  }
+  function getDate() {
+    var todays = String(today).slice(0, 10);
+    return todays;
+  }
   const handleSubmit = async (event) => {
     event.preventDefault();
-    var today = new Date();
-
-    var date =
-      today.getFullYear() +
-      "-" +
-      (today.getMonth() + 1) +
-      "-" +
-      today.getDate();
-    var time =
-      today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     const orderResult = collection(db, "orders");
     addDoc(orderResult, {
       orders: orders,
@@ -112,8 +121,8 @@ const Order = ({ orders, handleClose }) => {
         uid: dataUser.uid,
       },
       status: "وضع الانتظار",
-      orderTime: time,
-      orderDate: date,
+      orderTime: getTime(),
+      orderDate: getDate(),
       orderType: orderType,
     })
       .then(function () {
@@ -126,16 +135,6 @@ const Order = ({ orders, handleClose }) => {
       });
   };
   const handleppSubmit = async () => {
-    var today = new Date();
-
-    var date =
-      today.getFullYear() +
-      "-" +
-      (today.getMonth() + 1) +
-      "-" +
-      today.getDate();
-    var time =
-      today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     const orderResult = collection(db, "orders");
     addDoc(orderResult, {
       orders: orders,
@@ -151,8 +150,8 @@ const Order = ({ orders, handleClose }) => {
         uid: dataUser.uid,
       },
       status: "وضع الانتظار",
-      orderTime: time,
-      orderDate: date,
+      orderTime: getTime(),
+      orderDate: getDate(),
       orderType: orderType,
     })
       .then(function () {
@@ -172,7 +171,9 @@ const Order = ({ orders, handleClose }) => {
           style={{ height: "30px", width: "32px" }}
         ></AiOutlineCloseCircle>
         <OrderContent>
-          <OrderContainer> طلبك: </OrderContainer>
+          <OrderContainer>
+            طلبك: {getDate()} / {getTime()}
+          </OrderContainer>
           {orders.map((order) => (
             <OrderContainer key={order.id} editable>
               <OrderItem>
@@ -238,7 +239,7 @@ const Order = ({ orders, handleClose }) => {
                 disabled={!isValid}
                 type="submit"
               >
-                الدفع
+                الدفع نقدا (كاش)
               </Button>
               <br></br> <br></br>
               {isValid && (

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../MainPage/Header";
 import Footer from "../MainPage/Footer";
 import { Formik, Field, Form, ErrorMessage } from "formik";
@@ -8,7 +8,7 @@ import { db } from "../firebase/firebase.Config";
 import { addDoc, collection } from "firebase/firestore";
 import { NotificationManager } from "react-notifications";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 /*
 the special order  form using formik library for ordering meals that are not existed in the menu 
  name,quantity ,and describtion using regex to detect if theres
@@ -23,7 +23,28 @@ const errorStyling = {
 const SpecialOrder = () => {
   const { currentUser, dataUser } = useAuth();
   const navigate = useNavigate();
+  const [today, setToday] = useState();
 
+  React.useEffect(() => {
+    function getCurrentTime() {
+      axios
+        .get(`http://worldtimeapi.org/api/timezone/Asia/Jerusalem`)
+        .then((res) => {
+          setToday(JSON.stringify(res.data.datetime).slice(1, -1));
+        });
+    }
+    getCurrentTime();
+  }, []);
+
+  function getTime() {
+    var todays = String(today).slice(11, 19);
+    console.log(todays);
+    return todays;
+  }
+  function getDate() {
+    var todays = String(today).slice(0, 10);
+    return todays;
+  }
   return (
     <div className="special-order-page">
       <Header />
@@ -34,23 +55,6 @@ const SpecialOrder = () => {
           describtion: "",
         }}
         onSubmit={(values, actions) => {
-          const today = new Date(
-            Date("he-IL", {
-              timeZone: "Asia/Jerusalem",
-            })
-          );
-          var date =
-            today.getFullYear() +
-            "-" +
-            (today.getMonth() + 1) +
-            "-" +
-            today.getDate();
-          var time =
-            today.getHours() +
-            ":" +
-            today.getMinutes() +
-            ":" +
-            today.getSeconds();
           const orderResult = collection(db, "specialOrders");
           addDoc(orderResult, {
             specialOrder: {
@@ -68,8 +72,8 @@ const SpecialOrder = () => {
               uid: dataUser.uid,
             },
             status: "وضع الانتظار",
-            orderTime: time,
-            orderDate: date,
+            orderTime: getTime(),
+            orderDate: getDate(),
           })
             .then(function () {
               NotificationManager.success(" تم الطلب بنجاح ", "نجح");

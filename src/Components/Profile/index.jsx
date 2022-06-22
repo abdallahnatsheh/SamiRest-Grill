@@ -25,6 +25,7 @@ import paginationFactory from "react-bootstrap-table2-paginator";
 import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 import { useProfileOrdersHook } from "./profileOrdersHook";
 import { useProfileSpecialOrdersHook } from "./specialOrdersHook";
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 
 // order table colums
 const columns = [
@@ -125,6 +126,7 @@ const Profile = React.memo(function Profile() {
   //get order data from this custom hook
   const [orders] = useProfileOrdersHook();
   const [specialOrders] = useProfileSpecialOrdersHook();
+  const GOOGLE_MAP_API_KEY = "AIzaSyC-xrngxDoq1VuKpqkinK46qoG9EG4-WpA";
 
   //check image type and size allow only jpg and png types that less than 5 mb
   const handleImageChange = (e) => {
@@ -203,9 +205,7 @@ const Profile = React.memo(function Profile() {
               firstName: dataUser.firstName ? dataUser.firstName : "",
               lastName: dataUser.lastName ? dataUser.lastName : "",
               firstAddress: dataUser.firstAddress ? dataUser.firstAddress : "",
-              secondAddress: dataUser.secondAddress
-                ? dataUser.secondAddress
-                : "",
+
               phoneNumber: dataUser.phoneNumber ? dataUser.phoneNumber : "",
               birthday: dataUser.birthday ? dataUser.birthday : "",
             }}
@@ -224,7 +224,6 @@ const Profile = React.memo(function Profile() {
                     firstName: values.firstName,
                     lastName: values.lastName,
                     firstAddress: values.firstAddress,
-                    secondAddress: values.secondAddress,
                     phoneNumber: values.phoneNumber,
                     birthday: moment(values.birthday).format("YYYY-MM-DD"),
                   }).then(
@@ -240,8 +239,7 @@ const Profile = React.memo(function Profile() {
               }
 
               actions.setSubmitting(false);
-            }
-          }
+            }}
             validationSchema={Yup.object().shape({
               firstName: Yup.string()
                 .matches(arabicRegex, "الاسم باللغة العربية فقط")
@@ -250,7 +248,6 @@ const Profile = React.memo(function Profile() {
                 .matches(arabicRegex, "الاسم باللغة العربية فقط")
                 .required("اسم العائلة مطلوب"),
               firstAddress: Yup.string().required("العنوان الأول  مطلوب"),
-              secondAddress: Yup.string().required("العنوان الثاني  مطلوب"),
               phoneNumber: Yup.string()
                 .matches(phoneRegex, "رقم الهاتف غير صالح")
                 .required("رقم الهاتف مطلوب"),
@@ -259,7 +256,7 @@ const Profile = React.memo(function Profile() {
               ),
             })}
           >
-            {({ isSubmitting }) => (
+            {({ isSubmitting, setFieldValue, values }) => (
               <Container className="container-xl px-4 mt-4">
                 <hr className="mt-0 mb-4" />
                 <Form>
@@ -364,40 +361,39 @@ const Profile = React.memo(function Profile() {
                                 className="small mb-1"
                                 htmlFor="inputOrgName"
                               >
-                                العنوان الاساسي
+                                عنوان السكن الاساسي
                               </label>
-                              <Field
-                                className="form-control"
-                                id="inputOrgName"
-                                type="text"
-                                placeholder="ادخل عنوانك الاساسي"
-                                name="firstAddress"
-                              />
+                              <div>
+                                <GooglePlacesAutocomplete
+                                  apiKey={GOOGLE_MAP_API_KEY}
+                                  apiOptions={{ region: "jerusalem" }}
+                                  minLengthAutocomplete="3"
+                                  autocompletionRequest={{
+                                    componentRestrictions: {
+                                      country: ["il"],
+                                    },
+                                  }}
+                                  selectProps={{
+                                    placeholder:
+                                      "عنوانك الاساسي لتصل الطلبية اليه",
+                                    id: "inputOrgName",
+                                    type: "text",
+                                    name: "firstAddress",
+                                    value: {
+                                      value: values.firstAddress,
+                                      label: values.firstAddress,
+                                    },
+                                    onChange: (value) => {
+                                      setFieldValue(
+                                        "firstAddress",
+                                        value.label
+                                      );
+                                    },
+                                  }}
+                                />
+                              </div>
                               <ErrorMessage
                                 name="firstAddress"
-                                render={(msg) => (
-                                  <div type="invalid" style={errorStyling}>
-                                    {"! " + msg + " *"}
-                                  </div>
-                                )}
-                              />
-                            </div>
-                            <div className="col-md-6">
-                              <label
-                                className="small mb-1"
-                                htmlFor="inputLocation"
-                              >
-                                العنوان الثانوي
-                              </label>
-                              <Field
-                                className="form-control"
-                                id="inputLocation"
-                                type="text"
-                                placeholder="ادخل عنوانك الثانوي"
-                                name="secondAddress"
-                              />
-                              <ErrorMessage
-                                name="secondAddress"
                                 render={(msg) => (
                                   <div type="invalid" style={errorStyling}>
                                     {"! " + msg + " *"}
