@@ -3,16 +3,24 @@ import Badge from "react-bootstrap/Badge";
 import ShowItemModal from "../../Menu/MenuItem/ShowItemModal";
 import shopContext from "../../../context/shop-context";
 import "../../Menu/MenuItem/styles.css";
+import axios from "axios";
 /*
 this component handle showing all the meals that have active daily deals
 and checks if the deal still active or not 
 */
 const DDMenu = ({ list }) => {
-  const today = new Date(
-    Date("he-IL", {
-      timeZone: "Asia/Jerusalem",
-    })
-  );
+  const [today, setToday] = useState();
+  React.useEffect(() => {
+    function getCurrentTime() {
+      axios
+        .get(`http://worldtimeapi.org/api/timezone/Asia/Jerusalem`)
+        .then((res) => {
+          setToday(JSON.stringify(res.data.datetime).slice(1, -1));
+        });
+    }
+    getCurrentTime();
+  }, []);
+
   function showItem(item) {
     setFood(item);
     setshowItemModal(true);

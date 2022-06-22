@@ -4,7 +4,7 @@ import shopContext from "../../../../context/shop-context";
 import ButtonAddRemoveItem from "../../../ButtonAddRemoveItem";
 import "./style.css";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 //this modal shows meal addons and types with  dynamic price calculation (need to be fixed in better way in future)
 
 const ShowItemModal = React.memo(function ShowItemModal({
@@ -21,11 +21,17 @@ const ShowItemModal = React.memo(function ShowItemModal({
   const [foodTypeValue, setFoodTypeValue] = useState([]);
   // item quantity want to add to cart
   const [neededQuantitiy, setneededQuantitiy] = useState(0);
-  const today = new Date(
-    Date("he-IL", {
-      timeZone: "Asia/Jerusalem",
-    })
-  );
+  const [today, setToday] = useState();
+  React.useEffect(() => {
+    function getCurrentTime() {
+      axios
+        .get(`http://worldtimeapi.org/api/timezone/Asia/Jerusalem`)
+        .then((res) => {
+          setToday(JSON.stringify(res.data.datetime).slice(1, -1));
+        });
+    }
+    getCurrentTime();
+  }, []);
   const navigate = useNavigate();
 
   //calculate final price
